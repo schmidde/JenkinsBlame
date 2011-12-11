@@ -18,11 +18,23 @@ public class Build {
 	private Date date;
 	
 	@Persistent
+	private int nr;
+	
+	@Persistent
 	private String color;
 	
-	public Build(Date date, String color){
+	public Build(Date date, int nr, String color){
 		this.date = date;
+		this.nr = nr;
 		this.color = color;
+	}
+
+	public int getNr() {
+		return nr;
+	}
+
+	public void setNr(int nr) {
+		this.nr = nr;
 	}
 
 	public Key getKey() {
