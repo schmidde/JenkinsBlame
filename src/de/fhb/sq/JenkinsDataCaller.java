@@ -9,7 +9,6 @@ import java.net.URL;
 import java.nio.charset.Charset;
 
 import java.util.Date;
-import org.json.JSONObject;
 
 /**
  * Die Klasse holt von einem Jenkins CI Server XML oder JSON. 
@@ -47,7 +46,7 @@ public class JenkinsDataCaller {
 	    return sb.toString();
 	  }
 
-	  public static JSONObject readJsonFromUrl(String url) throws IOException{
+	  public static JSONObject readJsonFromUrl(String url) throws IOException, JSONException{
 	    InputStream is = new URL(url).openStream();
 	    try {
 	      BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
