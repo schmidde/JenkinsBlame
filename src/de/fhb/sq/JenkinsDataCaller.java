@@ -20,7 +20,7 @@ import java.util.Date;
  * 
  * @version 0.1
  * */
-public class JenkinsDataCaller {
+public class JenkinsDataCaller implements JenkinsDataCallerInterface{
 	
 	private int buildNr;
 	private String buildPath, buildJob, buildFarbe;
@@ -32,7 +32,7 @@ public class JenkinsDataCaller {
 		this.buildJob = buildJob;
 	}
 	
-	public static JSONObject callJson(String url) throws IOException, JSONException {
+	public JSONObject callJson(String url) throws IOException, JSONException {
 	    InputStream is = new URL(url).openStream();
 	    try {
 	      BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
@@ -44,8 +44,10 @@ public class JenkinsDataCaller {
 	    }
 	  }
 	
-	public void callXml(){
+	public Object callXml(String url){
 		//Todo
+		Object obj = null;
+		return obj;
 	}
 
 
