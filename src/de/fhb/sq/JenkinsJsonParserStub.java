@@ -2,70 +2,57 @@ package de.fhb.sq;
 
 import java.io.IOException;
 import javax.servlet.http.*;
-
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONException;
 
-public class JenkinsJsonParserServlet extends HttpServlet{
-	
+public class JenkinsJsonParserStub extends HttpServlet implements JenkinsJsonParserInterface{
+
 	private String serverUrl, jobName, generalURL, buildNrUrl, tree;
 	private JSONObject json;
-	private JenkinsDataCallerInterface jdc;
 	
-	public JenkinsJsonParserServlet(String serverUrl, String jobName){
+	public JenkinsJsonParserStub(String serverUrl, String jobName){
 		this.serverUrl = serverUrl;
 		this.jobName = jobName;
 	}
-	
+	@Override
 	public int getLastBuildNr() throws IOException, JSONException{
 		
-		String tree = "tree=builds[number]";
-		jdc = new JenkinsDataCaller();
-		json = jdc.callJson(getGeneralURL() + tree);
+		json = new JSONObject("{\"builds\":[{\"number\":22},{\"number\":21},{\"number\":20}]}");
 		return json.getJSONArray("builds").getJSONObject(0).getInt("number");
 	}
-	
+	@Override
 	public String getLastBuilder() throws IOException, JSONException{
-		//Todo
-		String tree = "tree=actions[causes[userName]]";
-		jdc = new JenkinsDataCaller();
-		json = jdc.callJson(getBuildNrURL() + tree);
+		
+		json = new JSONObject("{\"actions\":[{\"causes\":[{\"userName\":\"Andy Klay\"}]},{},{},{},{}]}");
 		return json.getJSONArray("actions").getJSONObject(0).getJSONArray("causes").getJSONObject(0).getString("userName");
 	}
-	
+	@Override
 	public String getColor() throws IOException, JSONException{
-		
-		String tree= "tree=color";
-		jdc = new JenkinsDataCaller();
-		json = jdc.callJson(getGeneralURL() + tree);
+
+		json = new JSONObject("{\"color\":\"red\"}");
 		return json.getString("color");
 	}
-	
+	@Override
 	public int getLastGoodBuild() throws IOException, JSONException{
-		
-		String tree = "tree=lastSuccessfulBuild[number]";
-		jdc = new JenkinsDataCaller();
-		json = jdc.callJson(getGeneralURL() + tree);
+
+		json = new JSONObject("{\"lastSuccessfulBuild\":{\"number\":21}}");
 		return json.getJSONObject("lastSuccessfulBuild").getInt("number");
 	}
-	
+	@Override
 	public int getLastBadBuild() throws JSONException, IOException{
-		
-		String tree = "tree=lastFailedBuild[number]";
-		jdc = new JenkinsDataCaller();
-		json = jdc.callJson(getGeneralURL() + tree);
+
+		json = new JSONObject("{\"lastFailedBuild\":{\"number\":22}}");
 		return json.getJSONObject("lastFailedBuild").getInt("number");
 	}
-	
+	@Override
 	public long getLastTimeStamp() throws IOException, JSONException{
-		
-		String tree = "tree=timestamp";
-		jdc = new JenkinsDataCaller();
-		json = jdc.callJson(getBuildNrURL() + tree);
+
+		json = new JSONObject("{\"timestamp\":1323541990370}");
 		return json.getLong("timestamp");
 	}
-	public JenkinsVO createJenkinsVO(){
+
+	@Override
+	public JenkinsVO createJenkinsVO() {
 		JenkinsVO jvo = new JenkinsVO();
 		try {
 			jvo.setColor(getColor());
@@ -83,14 +70,6 @@ public class JenkinsJsonParserServlet extends HttpServlet{
 		}
 		return jvo;
 	}
-	//generelle URL fuer JSON-Object des Jobs
-	public String getGeneralURL() {
-		
-		return generalURL = serverUrl + "/job/" + jobName + "/api/json?";
-	}
-	//spezielle URL fuer das JSON-Object des letzten Builds
-	public String getBuildNrURL() throws IOException, JSONException {
-		return buildNrUrl = serverUrl + "/job/" + jobName + "/" + getLastBuildNr() + "/" + "/api/json?";
-	}
+
 	
 }

@@ -13,7 +13,7 @@ public class JenkinsBlameServlet extends HttpServlet {
 			throws IOException {
 		resp.setContentType("text/plain");
 		resp.getWriter().println("Hello, world");
-		JenkinsJsonParserServlet jjp = new JenkinsJsonParserServlet("http://jenkins.rambow.it:8080", "Auto-B-Day");
+		JenkinsJsonParserInterface jjp = new JenkinsJsonParserStub("http://jenkins.rambow.it:8080", "Auto-B-Day");
 		JSONObject json;
 
 		try {
