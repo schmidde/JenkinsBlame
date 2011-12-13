@@ -65,6 +65,24 @@ public class JenkinsJsonParserServlet extends HttpServlet{
 		json = jdc.callJson(getBuildNrURL() + tree);
 		return json.getLong("timestamp");
 	}
+	public JenkinsVO createJenkinsVO(){
+		JenkinsVO jvo = new JenkinsVO();
+		try {
+			jvo.setColor(getColor());
+			jvo.setLastBuilder(getLastBuilder());
+			jvo.setLastBuildNumber(getLastBuildNr());
+			jvo.setLastFailedBuildNumber(getLastBadBuild());
+			jvo.setLastSuccessfulBuildNumber(getLastGoodBuild());
+			jvo.setTimestamp(getLastTimeStamp());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return jvo;
+	}
 	//generelle URL fuer JSON-Object des Jobs
 	public String getGeneralURL() {
 		
