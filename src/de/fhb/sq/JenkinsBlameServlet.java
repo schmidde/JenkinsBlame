@@ -13,13 +13,17 @@ public class JenkinsBlameServlet extends HttpServlet {
 			throws IOException {
 		resp.setContentType("text/plain");
 		resp.getWriter().println("Hello, world");
-		JenkinsJsonParserServlet jjp = new JenkinsJsonParserServlet("http://jenkins.rambow.it:8080", "JenkinsBlame");
+		JenkinsJsonParserServlet jjp = new JenkinsJsonParserServlet("http://jenkins.rambow.it:8080", "Auto-B-Day");
 		JSONObject json;
 
 		try {
 			
 			resp.getWriter().println("Last Build-Number: " + jjp.getLastBuildNr());
 			resp.getWriter().println("Last Builder: " + jjp.getLastBuilder());
+			resp.getWriter().println("Color: " + jjp.getColor());
+			resp.getWriter().println("Last Successful Build: " + jjp.getLastGoodBuild());
+			resp.getWriter().println("Last Failed Build: " + jjp.getLastBadBuild());
+			resp.getWriter().println("Last Timestamp: " + jjp.getLastTimeStamp());
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			resp.getWriter().println("Ein Fehler ist aufgetreten");

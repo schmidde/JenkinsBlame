@@ -34,10 +34,36 @@ public class JenkinsJsonParserServlet extends HttpServlet{
 		return json.getJSONArray("actions").getJSONObject(0).getJSONArray("causes").getJSONObject(0).getString("userName");
 	}
 	
-	public String getColor(){
+	public String getColor() throws IOException, JSONException{
 		
-		//Todo
-		return "";
+		String tree= "tree=color";
+		jdc = new JenkinsDataCaller();
+		json = jdc.callJson(getGeneralURL() + tree);
+		return json.getString("color");
+	}
+	
+	public int getLastGoodBuild() throws IOException, JSONException{
+		
+		String tree = "tree=lastSuccessfulBuild[number]";
+		jdc = new JenkinsDataCaller();
+		json = jdc.callJson(getGeneralURL() + tree);
+		return json.getJSONObject("lastSuccessfulBuild").getInt("number");
+	}
+	
+	public int getLastBadBuild() throws JSONException, IOException{
+		
+		String tree = "tree=lastFailedBuild[number]";
+		jdc = new JenkinsDataCaller();
+		json = jdc.callJson(getGeneralURL() + tree);
+		return json.getJSONObject("lastFailedBuild").getInt("number");
+	}
+	
+	public long getLastTimeStamp() throws IOException, JSONException{
+		
+		String tree = "tree=timestamp";
+		jdc = new JenkinsDataCaller();
+		json = jdc.callJson(getBuildNrURL() + tree);
+		return json.getLong("timestamp");
 	}
 	//generelle URL fuer JSON-Object des Jobs
 	public String getGeneralURL() {
