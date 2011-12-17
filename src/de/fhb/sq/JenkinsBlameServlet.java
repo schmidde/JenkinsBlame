@@ -13,7 +13,7 @@ public class JenkinsBlameServlet extends HttpServlet {
 			throws IOException {
 		resp.setContentType("text/plain");
 		resp.getWriter().println("Hello, world");
-		JenkinsJsonParserInterface jjp = new JenkinsJsonParserStub("http://jenkins.rambow.it:8080", "Auto-B-Day");
+		JenkinsJsonParserInterface jjp = new JenkinsJsonParser("http://jenkins.rambow.it:8080", "Auto-B-Day");
 		JSONObject json;
 
 		try {
@@ -26,7 +26,7 @@ public class JenkinsBlameServlet extends HttpServlet {
 			resp.getWriter().println("Last Timestamp: " + jjp.getLastTimeStamp());
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
-			resp.getWriter().println("Ein Fehler ist aufgetreten");
+			resp.getWriter().println("Eine JSONException ist aufgetreten");
 			e.printStackTrace();
 		}
 
