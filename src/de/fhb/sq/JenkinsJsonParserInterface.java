@@ -1,11 +1,13 @@
 package de.fhb.sq;
 
+import java.util.List;
 import java.io.IOException;
 import org.json.JSONException;
 
 public interface JenkinsJsonParserInterface{
 
 	public int getLastBuildNr() throws IOException, JSONException;
+	public List getBuilds() throws IOException, JSONException;
 	public String getLastBuilder() throws IOException, JSONException;
 	public String getColor() throws IOException, JSONException;
 	public int getLastGoodBuild() throws IOException, JSONException;

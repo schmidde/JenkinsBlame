@@ -1,6 +1,8 @@
 package de.fhb.sq;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,6 +25,19 @@ public class JenkinsJsonParser implements JenkinsJsonParserInterface{
 		jdc = new JenkinsDataCaller();
 		json = jdc.callJson(getGeneralURL() + tree);
 		return json.getJSONArray("builds").getJSONObject(0).getInt("number");
+	}
+	@Override
+	public List<Integer> getBuilds() throws IOException, JSONException{
+		
+		List<Integer> builds = new ArrayList<Integer>();
+		jdc = new JenkinsDataCaller();
+		
+		json = jdc.callJson(getGeneralURL());
+		
+		for(int i = 0; i < json.getJSONArray("builds").length(); i++){
+				builds.add(json.getJSONArray("builds").getJSONObject(i).getInt("number"));
+		}
+		return builds;
 	}
 	
 	public String getLastBuilder() throws IOException, JSONException{

@@ -19,6 +19,9 @@ public class JenkinsBlameServlet extends HttpServlet {
 		try {
 			
 			resp.getWriter().println("Last Build-Number: " + jjp.getLastBuildNr());
+			for(Object item: jjp.getBuilds()){
+				resp.getWriter().println("Builds: " + item);
+			}
 			resp.getWriter().println("Last Builder: " + jjp.getLastBuilder());
 			resp.getWriter().println("Color: " + jjp.getColor());
 			resp.getWriter().println("Last Successful Build: " + jjp.getLastGoodBuild());

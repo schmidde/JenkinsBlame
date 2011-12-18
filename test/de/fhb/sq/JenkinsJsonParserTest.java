@@ -7,7 +7,7 @@ import org.junit.Test;
 public class JenkinsJsonParserTest {
 
 	@Test
-	public void test() {
+	public void testGetLastBuildNr() {
 		fail("Not yet implemented");
 	}
 
