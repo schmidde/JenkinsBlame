@@ -90,6 +90,8 @@ public class JenkinsJsonParser implements JenkinsJsonParserInterface{
 		JenkinsVO jvo = new JenkinsVO();
 		try {
 			jvo.setColor(getColor());
+			jvo.setFirstBuildNumber(getFirstBuild());
+			jvo.setBuilds(getBuilds());
 			jvo.setLastBuilder(getLastBuilder());
 			jvo.setLastBuildNumber(getLastBuildNr());
 			jvo.setLastFailedBuildNumber(getLastBadBuild());

@@ -77,6 +77,8 @@ public int getFirstBuild() throws IOException, JSONException{
 		JenkinsVO jvo = new JenkinsVO();
 		try {
 			jvo.setColor(getColor());
+			jvo.setFirstBuildNumber(getFirstBuild());
+			jvo.setBuilds(getBuilds());
 			jvo.setLastBuilder(getLastBuilder());
 			jvo.setLastBuildNumber(getLastBuildNr());
 			jvo.setLastFailedBuildNumber(getLastBadBuild());

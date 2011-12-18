@@ -1,7 +1,11 @@
 package de.fhb.sq;
 
+import java.util.List;
+
 public class JenkinsVO {
 	
+	private int firstBuildNumber;
+	private List builds;
 	private int lastBuildNumber;
 	private int lastFailedBuildNumber;
 	private int lastSuccessfulBuildNumber;
@@ -57,6 +61,22 @@ public class JenkinsVO {
 
 	public void setTimestamp(long timestamp) {
 		this.timestamp = timestamp;
+	}
+
+	public int getFirstBuildNumber() {
+		return firstBuildNumber;
+	}
+
+	public void setFirstBuildNumber(int firstBuildNumber) {
+		this.firstBuildNumber = firstBuildNumber;
+	}
+
+	public List getBuilds() {
+		return builds;
+	}
+
+	public void setBuilds(List builds) {
+		this.builds = builds;
 	}
 	
 	
