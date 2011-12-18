@@ -1,14 +1,16 @@
 package de.fhb.sq;
 
 import com.google.appengine.api.datastore.Key;
+import java.util.Date;
 import java.util.List;
+
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 @PersistenceCapable
-public class Member {
+public class Project {
 	
 	@PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
@@ -19,9 +21,16 @@ public class Member {
 	
 	@Persistent
 	private List<Build> builds;
-	
-	public Member(String name, List<Build> builds){
+
+	public Project(String name){
 		this.name = name;
+	}
+	
+	public List<Build> getBuilds() {
+		return builds;
+	}
+
+	public void setBuilds(List<Build> builds) {
 		this.builds = builds;
 	}
 
@@ -29,24 +38,8 @@ public class Member {
 		return key;
 	}
 
-	public void setKey(Key key) {
-		this.key = key;
-	}
-
 	public String getName() {
 		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public List<Build> getBuilds() {
-		return builds;
-	}
-
-	public void setBuilds(List<Build> builds) {
-		this.builds = builds;
 	}
 	
 	
