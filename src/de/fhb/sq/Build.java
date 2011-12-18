@@ -23,6 +23,9 @@ public class Build {
 	@Persistent
 	private String color;
 	
+	@Persistent
+	private String builder;
+	
 	public Build(Date date, int nr, String color){
 		this.date = date;
 		this.nr = nr;

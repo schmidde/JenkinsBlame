@@ -13,11 +13,12 @@ public class JenkinsBlameServlet extends HttpServlet {
 			throws IOException {
 		resp.setContentType("text/plain");
 		resp.getWriter().println("Hello, world");
-		JenkinsJsonParserInterface jjp = new JenkinsJsonParserStub("http://jenkins.rambow.it:8080", "Auto-B-Day");
+		JenkinsJsonParserInterface jjp = new JenkinsJsonParser("http://jenkins.rambow.it:8080", "Auto-B-Day");
 		JSONObject json;
 
 		try {
 			
+			resp.getWriter().println("First Build-Number: " + jjp.getFirstBuild());
 			resp.getWriter().println("Last Build-Number: " + jjp.getLastBuildNr());
 			for(Object item: jjp.getBuilds()){
 				resp.getWriter().println("Builds: " + item);

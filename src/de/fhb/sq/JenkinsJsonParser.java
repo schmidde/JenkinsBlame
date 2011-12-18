@@ -56,6 +56,13 @@ public class JenkinsJsonParser implements JenkinsJsonParserInterface{
 		return json.getString("color");
 	}
 	
+	public int getFirstBuild() throws IOException, JSONException{
+		
+		jdc = new JenkinsDataCaller();
+		json = jdc.callJson(getGeneralURL());
+		return json.getJSONObject("firstBuild").getInt("number");
+	}
+	
 	public int getLastGoodBuild() throws IOException, JSONException{
 		
 		String tree = "tree=lastSuccessfulBuild[number]";

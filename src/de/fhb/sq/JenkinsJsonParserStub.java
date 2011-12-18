@@ -47,6 +47,12 @@ public class JenkinsJsonParserStub extends HttpServlet implements JenkinsJsonPar
 		json = new JSONObject("{\"color\":\"red\"}");
 		return json.getString("color");
 	}
+	
+public int getFirstBuild() throws IOException, JSONException{
+		
+		json = new JSONObject("{\"firstBuild\":{\"number\":20,\"url\":\"http://rambow.it:8080/job/Auto-B-Day/37/\"}}");
+		return json.getJSONObject("firstBuild").getInt("number");
+	}
 	@Override
 	public int getLastGoodBuild() throws IOException, JSONException{
 

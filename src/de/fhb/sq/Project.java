@@ -19,8 +19,17 @@ public class Project {
 	@Persistent
 	private String name;
 	
-	@Persistent
+	@Persistent(mappedBy = "nr")
 	private List<Build> builds;
+	
+	@Persistent
+	private int firstBuild;
+	
+	@Persistent
+	private int lastFailedBuild;
+	
+	@Persistent
+	private int lastSuccessfulBuild;
 
 	public Project(String name){
 		this.name = name;
