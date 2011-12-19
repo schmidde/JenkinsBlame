@@ -2,13 +2,13 @@
 <html>
 <head><title>JenkinsBlame</title></head>
 <body>
-	<div>
+	<div style="background-color: navajowhite; padding-left: 5px; border-top: 1px solid; border-bottom: 1px solid;"><br>
 		<form action="/jenkinsblame" method="get">
 			Servername: (z.B. http://servername.de:port) 
 			<input name ="servername" type="text" />
 			Jobname: 
 			<input name="jobname" type="text" />
-			<input type="submit" value="Send" /><br><hr>
+			<input type="submit" value="Send" /><br>
 		</form>
 	</div>
 	<% 

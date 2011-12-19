@@ -35,22 +35,13 @@ public class JenkinsBlameServlet extends HttpServlet {
 			req.setAttribute("color", jjp.getColor());
 			forward("/jenkinsblame.jsp", req, resp);
 			
-			/*resp.getWriter().println("First Build-Number: " + jjp.getFirstBuild());
-			resp.getWriter().println("Last Build-Number: " + jjp.getLastBuildNr());
-			for(Object item: jjp.getBuilds()){
-				resp.getWriter().println("Builds: " + item);
-			}
-			resp.getWriter().println("Last Builder: " + jjp.getLastBuilder());
-			resp.getWriter().println("Color: " + jjp.getColor());
-			resp.getWriter().println("Last Successful Build: " + jjp.getLastGoodBuild());
-			resp.getWriter().println("Last Failed Build: " + jjp.getLastBadBuild());
-			resp.getWriter().println("Last Timestamp: " + jjp.getLastTimeStamp());*/
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			resp.getWriter().println("Eine JSONException ist aufgetreten");
 			e.printStackTrace();
 		} catch (ServletException e) {
 			// TODO Auto-generated catch block
+			resp.getWriter().println("Eine ServletException ist aufgetreten");
 			e.printStackTrace();
 		}
 
