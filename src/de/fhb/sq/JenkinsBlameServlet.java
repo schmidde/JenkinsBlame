@@ -1,16 +1,22 @@
 package de.fhb.sq;
 
 import java.io.IOException;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
 import javax.servlet.http.*;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.google.apphosting.utils.remoteapi.RemoteApiPb.Request;
+
 @SuppressWarnings("serial")
 public class JenkinsBlameServlet extends HttpServlet {
 	
 	private String servername, jobname;
+	private RequestDispatcher dispatcher;
 	
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
@@ -24,7 +30,12 @@ public class JenkinsBlameServlet extends HttpServlet {
 
 		try {
 			
-			resp.getWriter().println("First Build-Number: " + jjp.getFirstBuild());
+			req.setAttribute("builder", jjp.getLastBuilder());
+			req.setAttribute("lastBuild", jjp.getLastBuildNr());
+			req.setAttribute("color", jjp.getColor());
+			forward("/jenkinsblame.jsp", req, resp);
+			
+			/*resp.getWriter().println("First Build-Number: " + jjp.getFirstBuild());
 			resp.getWriter().println("Last Build-Number: " + jjp.getLastBuildNr());
 			for(Object item: jjp.getBuilds()){
 				resp.getWriter().println("Builds: " + item);
@@ -33,12 +44,19 @@ public class JenkinsBlameServlet extends HttpServlet {
 			resp.getWriter().println("Color: " + jjp.getColor());
 			resp.getWriter().println("Last Successful Build: " + jjp.getLastGoodBuild());
 			resp.getWriter().println("Last Failed Build: " + jjp.getLastBadBuild());
-			resp.getWriter().println("Last Timestamp: " + jjp.getLastTimeStamp());
+			resp.getWriter().println("Last Timestamp: " + jjp.getLastTimeStamp());*/
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			resp.getWriter().println("Eine JSONException ist aufgetreten");
 			e.printStackTrace();
+		} catch (ServletException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
+	}
+	public void forward(String jspSite, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+		dispatcher = getServletContext().getRequestDispatcher(jspSite);
+		dispatcher.forward(req, resp);
 	}
 }
