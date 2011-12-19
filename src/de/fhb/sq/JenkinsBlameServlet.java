@@ -9,12 +9,18 @@ import org.json.JSONObject;
 
 @SuppressWarnings("serial")
 public class JenkinsBlameServlet extends HttpServlet {
+	
+	private String servername, jobname;
+	
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
+		this.servername = req.getParameter("servername");
+		this.jobname = req.getParameter("jobname");
+		
 		resp.setContentType("text/plain");
 		resp.getWriter().println("Hello, world");
-		JenkinsJsonParserInterface jjp = new JenkinsJsonParser("http://jenkins.rambow.it:8080", "Auto-B-Day");
-		JSONObject json;
+		JenkinsJsonParserInterface jjp = new JenkinsJsonParser(servername, jobname);
+		JSONObject json;		
 
 		try {
 			

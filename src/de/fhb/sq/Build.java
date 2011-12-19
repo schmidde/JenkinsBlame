@@ -15,10 +15,10 @@ public class Build {
     private Key key;
 	
 	@Persistent
-	private Date date;
+	private int nr;
 	
 	@Persistent
-	private int nr;
+	private Date date;
 	
 	@Persistent
 	private String color;
@@ -62,6 +62,14 @@ public class Build {
 
 	public void setColor(String color) {
 		this.color = color;
+	}
+
+	public String getBuilder() {
+		return builder;
+	}
+
+	public void setBuilder(String builder) {
+		this.builder = builder;
 	}
 	
 

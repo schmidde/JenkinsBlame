@@ -50,6 +50,30 @@ public class Project {
 	public String getName() {
 		return name;
 	}
+
+	public int getFirstBuild() {
+		return firstBuild;
+	}
+
+	public void setFirstBuild(int firstBuild) {
+		this.firstBuild = firstBuild;
+	}
+
+	public int getLastFailedBuild() {
+		return lastFailedBuild;
+	}
+
+	public void setLastFailedBuild(int lastFailedBuild) {
+		this.lastFailedBuild = lastFailedBuild;
+	}
+
+	public int getLastSuccessfulBuild() {
+		return lastSuccessfulBuild;
+	}
+
+	public void setLastSuccessfulBuild(int lastSuccessfulBuild) {
+		this.lastSuccessfulBuild = lastSuccessfulBuild;
+	}
 	
 	
 }
