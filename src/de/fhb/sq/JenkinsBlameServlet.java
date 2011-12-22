@@ -29,7 +29,7 @@ public class JenkinsBlameServlet extends HttpServlet {
 		JSONObject json;		
 
 		try {
-			if(new JenkinsBlameModel().hasJob("Auto-B-Day")){
+			if(new JenkinsBlameStatsServlet().hasJob("Auto-B-Day")){
 				req.setAttribute("builder", jjp.getLastBuilder());
 				req.setAttribute("lastBuild", jjp.getLastBuildNr());
 				req.setAttribute("color", jjp.getColor());

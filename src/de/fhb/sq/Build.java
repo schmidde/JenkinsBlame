@@ -26,7 +26,7 @@ public class Build {
 	@Persistent
 	private String builder;
 	
-	public Build(Date date, int nr, String color){
+	public Build(long timestamp, int nr, String color){
 		this.date = date;
 		this.nr = nr;
 		this.color = color;

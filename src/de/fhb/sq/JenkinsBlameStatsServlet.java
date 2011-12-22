@@ -6,7 +6,7 @@ import java.util.List;
 import javax.jdo.PersistenceManager;
 import javax.servlet.http.*;
 
-public class JenkinsBlameModel extends HttpServlet{
+public class JenkinsBlameStatsServlet extends HttpServlet{
 	
 	private JenkinsJsonParserInterface jjp = new JenkinsJsonParserStub("Url", "Job");
 	private PersistenceManager pm = new PMF().get().getPersistenceManager();
@@ -33,9 +33,24 @@ public class JenkinsBlameModel extends HttpServlet{
 	    	}
 	    	return false;}
 	}
-	public void insertJob(){
+	public void initJob(String jobName){
+		Build build;
+		List<Build> builds;
+		
+		for(Object o: jvo.getBuilds()){
+			
+		}
 		jvo = jjp.createJenkinsVO();
+		Project newProj = new Project(jobName);
+		//newProj.setBuilds();
+		try {
+            pm.makePersistent(newProj);
+        } finally {
+            pm.close();
+        }
+
 	}
+	public void addBuild(){}
 	public void checkColor(){}
 	public boolean isCrashed(){
 		return false;
