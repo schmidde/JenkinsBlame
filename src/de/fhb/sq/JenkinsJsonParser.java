@@ -39,15 +39,21 @@ public class JenkinsJsonParser implements JenkinsJsonParserInterface{
 		}
 		return builds;
 	}
-	
+	@Override
+	public String getBuilder(int nr) throws IOException, JSONException{
+		String tree = "tree=actions[causes[userName]]";
+		jdc = new JenkinsDataCaller();
+		json = jdc.callJson(getBuildNrURL(nr) + tree);
+		return json.getJSONArray("actions").getJSONObject(0).getJSONArray("causes").getJSONObject(0).getString("userName");
+	}
+	@Override
 	public String getLastBuilder() throws IOException, JSONException{
-		//Todo
 		String tree = "tree=actions[causes[userName]]";
 		jdc = new JenkinsDataCaller();
 		json = jdc.callJson(getBuildNrURL() + tree);
 		return json.getJSONArray("actions").getJSONObject(0).getJSONArray("causes").getJSONObject(0).getString("userName");
 	}
-	
+	@Override
 	public String getColor() throws IOException, JSONException{
 		
 		String tree= "tree=color";
@@ -55,14 +61,26 @@ public class JenkinsJsonParser implements JenkinsJsonParserInterface{
 		json = jdc.callJson(getGeneralURL() + tree);
 		return json.getString("color");
 	}
-	
+	@Override
+	public String getColor(int nr) throws IOException, JSONException{
+		
+		String tree= "tree=result", color = null;
+		jdc = new JenkinsDataCaller();
+		json = jdc.callJson(getBuildNrURL(nr) + tree);
+		color = json.getString("result");
+		if(color.equals("SUCCESS")){
+			return "blue";
+		}
+		else return "red";
+	}
+	@Override
 	public int getFirstBuild() throws IOException, JSONException{
 		
 		jdc = new JenkinsDataCaller();
 		json = jdc.callJson(getGeneralURL());
 		return json.getJSONObject("firstBuild").getInt("number");
 	}
-	
+	@Override
 	public int getLastGoodBuild() throws IOException, JSONException{
 		
 		String tree = "tree=lastSuccessfulBuild[number]";
@@ -70,7 +88,7 @@ public class JenkinsJsonParser implements JenkinsJsonParserInterface{
 		json = jdc.callJson(getGeneralURL() + tree);
 		return json.getJSONObject("lastSuccessfulBuild").getInt("number");
 	}
-	
+	@Override
 	public int getLastBadBuild() throws JSONException, IOException{
 		
 		String tree = "tree=lastFailedBuild[number]";
@@ -78,7 +96,7 @@ public class JenkinsJsonParser implements JenkinsJsonParserInterface{
 		json = jdc.callJson(getGeneralURL() + tree);
 		return json.getJSONObject("lastFailedBuild").getInt("number");
 	}
-	
+	@Override
 	public long getLastTimeStamp() throws IOException, JSONException{
 		
 		String tree = "tree=timestamp";
@@ -86,6 +104,15 @@ public class JenkinsJsonParser implements JenkinsJsonParserInterface{
 		json = jdc.callJson(getBuildNrURL() + tree);
 		return json.getLong("timestamp");
 	}
+	@Override
+	public long getTimeStamp(int nr) throws IOException, JSONException{
+		
+		String tree = "tree=timestamp";
+		jdc = new JenkinsDataCaller();
+		json = jdc.callJson(getBuildNrURL(nr) + tree);
+		return json.getLong("timestamp");
+	}
+	@Override
 	public JenkinsVO createJenkinsVO(){
 		JenkinsVO jvo = new JenkinsVO();
 		try {
@@ -114,6 +141,9 @@ public class JenkinsJsonParser implements JenkinsJsonParserInterface{
 	//spezielle URL fuer das JSON-Object des letzten Builds
 	public String getBuildNrURL() throws IOException, JSONException {
 		return buildNrUrl = serverUrl + "/job/" + jobName + "/" + getLastBuildNr() + "/" + "/api/json?";
+	}
+	public String getBuildNrURL(int nr) throws IOException, JSONException {
+		return buildNrUrl = serverUrl + "/job/" + jobName + "/" + nr + "/" + "/api/json?";
 	}
 	
 }

@@ -36,6 +36,11 @@ public class JenkinsJsonParserStub extends HttpServlet implements JenkinsJsonPar
 		return builds;
 	}
 	@Override
+	public String getBuilder(int nr) throws IOException, JSONException{
+		json = new JSONObject("{\"actions\":[{\"causes\":[{\"userName\":\"Andy Klay\"}]},{},{},{},{}]}");
+		return json.getJSONArray("actions").getJSONObject(0).getJSONArray("causes").getJSONObject(0).getString("userName");
+	}
+	@Override
 	public String getLastBuilder() throws IOException, JSONException{
 		
 		json = new JSONObject("{\"actions\":[{\"causes\":[{\"userName\":\"Andy Klay\"}]},{},{},{},{}]}");
@@ -47,8 +52,17 @@ public class JenkinsJsonParserStub extends HttpServlet implements JenkinsJsonPar
 		json = new JSONObject("{\"color\":\"red\"}");
 		return json.getString("color");
 	}
-	
-public int getFirstBuild() throws IOException, JSONException{
+	@Override
+	public String getColor(int nr) throws IOException, JSONException{
+		String color = null;
+		json = new JSONObject("{\"color\":\"red\"}");
+		color = json.getString("result");
+		if(color.equals("SUCCESS")){
+			return "blue";
+		}
+		else return "red";
+	}
+	public int getFirstBuild() throws IOException, JSONException{
 		
 		json = new JSONObject("{\"firstBuild\":{\"number\":20,\"url\":\"http://rambow.it:8080/job/Auto-B-Day/37/\"}}");
 		return json.getJSONObject("firstBuild").getInt("number");
@@ -71,7 +85,12 @@ public int getFirstBuild() throws IOException, JSONException{
 		json = new JSONObject("{\"timestamp\":1323541990370}");
 		return json.getLong("timestamp");
 	}
-
+	@Override
+	public long getTimeStamp(int nr) throws IOException, JSONException{
+		
+		json = new JSONObject("{\"timestamp\":1323541990370}");
+		return json.getLong("timestamp");
+	}
 	@Override
 	public JenkinsVO createJenkinsVO() {
 		JenkinsVO jvo = new JenkinsVO();

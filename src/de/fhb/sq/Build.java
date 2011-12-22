@@ -18,7 +18,7 @@ public class Build {
 	private int nr;
 	
 	@Persistent
-	private Date date;
+	private long timestamp;
 	
 	@Persistent
 	private String color;
@@ -26,10 +26,11 @@ public class Build {
 	@Persistent
 	private String builder;
 	
-	public Build(long timestamp, int nr, String color){
-		this.date = date;
+	public Build(long timestamp, int nr, String color, String builder){
+		this.timestamp = timestamp;
 		this.nr = nr;
 		this.color = color;
+		this.builder = builder;
 	}
 
 	public int getNr() {
@@ -47,13 +48,13 @@ public class Build {
 	public void setKey(Key key) {
 		this.key = key;
 	}
-
-	public Date getDate() {
-		return date;
+	
+	public long getTimestamp() {
+		return timestamp;
 	}
 
-	public void setDate(Date date) {
-		this.date = date;
+	public void setTimestamp(long timestamp) {
+		this.timestamp = timestamp;
 	}
 
 	public String getColor() {

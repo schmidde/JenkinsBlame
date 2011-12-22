@@ -1,16 +1,25 @@
 package de.fhb.sq;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.jdo.PersistenceManager;
 import javax.servlet.http.*;
 
+import org.json.JSONException;
+
 public class JenkinsBlameStatsServlet extends HttpServlet{
 	
-	private JenkinsJsonParserInterface jjp = new JenkinsJsonParserStub("Url", "Job");
+	private String server, jobName;
+	private JenkinsJsonParserInterface jjp;
 	private PersistenceManager pm = new PMF().get().getPersistenceManager();
 	private JenkinsVO jvo = new JenkinsVO();
+	
+	public JenkinsBlameStatsServlet(String server, String jobName){
+		this.server = server;
+		this.jobName = jobName;
+	}
 	
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		
@@ -33,21 +42,34 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 	    	}
 	    	return false;}
 	}
-	public void initJob(String jobName){
+	public void initJob() throws IOException, JSONException {
 		Build build;
-		List<Build> builds;
-		
-		for(Object o: jvo.getBuilds()){
-			
-		}
+		List<Build> builds = new ArrayList<Build>();
+		long ts;
+		int nr;
+		String color, builder;
+		jjp = new JenkinsJsonParser(server, jobName);
 		jvo = jjp.createJenkinsVO();
-		Project newProj = new Project(jobName);
-		//newProj.setBuilds();
+		if(jvo != null){
+			for(Object o: jjp.getBuilds()){
+				System.out.println((Integer)o);
+				ts = jjp.getTimeStamp((Integer)o);
+				nr = (Integer)o;
+				color = jjp.getColor((Integer)o);
+				builder = jjp.getBuilder((Integer)o);
+				build = new Build(ts, nr, color, builder);
+				builds.add(build);
+			}
+		}
+		else System.out.println("Fehler bei Erstellung von JenkinsVO");
+		
+		/*Project newProj = new Project(jobName);
+		newProj.setBuilds();
 		try {
             pm.makePersistent(newProj);
         } finally {
             pm.close();
-        }
+        }*/
 
 	}
 	public void addBuild(){}

@@ -1,6 +1,7 @@
 package de.fhb.sq;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -9,8 +10,6 @@ import javax.servlet.http.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.google.apphosting.utils.remoteapi.RemoteApiPb.Request;
 
 @SuppressWarnings("serial")
 public class JenkinsBlameServlet extends HttpServlet {
@@ -29,19 +28,12 @@ public class JenkinsBlameServlet extends HttpServlet {
 		JSONObject json;		
 
 		try {
-			if(new JenkinsBlameStatsServlet().hasJob("Auto-B-Day")){
 				req.setAttribute("builder", jjp.getLastBuilder());
 				req.setAttribute("lastBuild", jjp.getLastBuildNr());
 				req.setAttribute("color", jjp.getColor());
+				new JenkinsBlameStatsServlet(servername, jobname).initJob();
 				forward("/jenkinsblame.jsp", req, resp);
-			}
-			else{
-				req.setAttribute("builder", "Job Error");
-				req.setAttribute("lastBuild", 0);
-				req.setAttribute("color", "red");
-				forward("/jenkinsblame.jsp", req, resp);
-			}
-			
+		
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			resp.getWriter().println("Eine JSONException ist aufgetreten");
