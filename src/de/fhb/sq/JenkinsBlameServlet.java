@@ -29,11 +29,18 @@ public class JenkinsBlameServlet extends HttpServlet {
 		JSONObject json;		
 
 		try {
-			
-			req.setAttribute("builder", jjp.getLastBuilder());
-			req.setAttribute("lastBuild", jjp.getLastBuildNr());
-			req.setAttribute("color", jjp.getColor());
-			forward("/jenkinsblame.jsp", req, resp);
+			if(new JenkinsBlameModel().hasJob("Auto-B-Day")){
+				req.setAttribute("builder", jjp.getLastBuilder());
+				req.setAttribute("lastBuild", jjp.getLastBuildNr());
+				req.setAttribute("color", jjp.getColor());
+				forward("/jenkinsblame.jsp", req, resp);
+			}
+			else{
+				req.setAttribute("builder", "Job Error");
+				req.setAttribute("lastBuild", 0);
+				req.setAttribute("color", "red");
+				forward("/jenkinsblame.jsp", req, resp);
+			}
 			
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
