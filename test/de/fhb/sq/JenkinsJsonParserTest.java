@@ -3,6 +3,7 @@ package de.fhb.sq;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.json.JSONException;
 import org.junit.*;
@@ -25,5 +26,8 @@ public class JenkinsJsonParserTest {
 		assertEquals("letzte Nr. sollte -1 sein", -1, j);
 		assertEquals("letzte Nr. sollte -1 sein", -1, k);
 	}
-
+	@Test
+	public void testGetBuilds(){
+		
+	}
 }

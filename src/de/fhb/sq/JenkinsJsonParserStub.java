@@ -29,92 +29,135 @@ public class JenkinsJsonParserStub extends JenkinsJsonParserAbstract{
 		return nr;
 	}
 	@Override
-	public List<Integer> getBuilds() throws IOException, JSONException{
+	public List<Integer> getBuilds(){
 		
 		List<Integer> builds = new ArrayList<Integer>();
 		
-		json = new JSONObject("{\"actions\":[{},{},{},{}],\"description\":\"\",\"displayName\":\"Auto-B-Day\",\"name\":\"Auto-B-Day\",\"url\":\"http://rambow.it:8080/job/Auto-B-Day/\",\"buildable\":true,\"builds\":[{\"number\":22,\"url\":\"http://rambow.it:8080/job/Auto-B-Day/22/\"},{\"number\":21,\"url\":\"http://rambow.it:8080/job/Auto-B-Day/21/\"},{\"number\":20,\"url\":\"http://rambow.it:8080/job/Auto-B-Day/20/\"}]}");
-		
-		for(int i = 0; i < json.getJSONArray("builds").length(); i++){
+		try {
+			json = new JSONObject("{\"actions\":[{},{},{},{}],\"description\":\"\",\"displayName\":\"Auto-B-Day\",\"name\":\"Auto-B-Day\",\"url\":\"http://rambow.it:8080/job/Auto-B-Day/\",\"buildable\":true,\"builds\":[{\"number\":22,\"url\":\"http://rambow.it:8080/job/Auto-B-Day/22/\"},{\"number\":21,\"url\":\"http://rambow.it:8080/job/Auto-B-Day/21/\"},{\"number\":20,\"url\":\"http://rambow.it:8080/job/Auto-B-Day/20/\"}]}");
+			for(int i = 0; i < json.getJSONArray("builds").length(); i++){
 				builds.add(json.getJSONArray("builds").getJSONObject(i).getInt("number"));
+			}
+		} catch (JSONException e) {
+			builds = null;
 		}
 		return builds;
 	}
 	@Override
-	public String getBuilder(int nr) throws IOException, JSONException{
-		json = new JSONObject("{\"actions\":[{\"causes\":[{\"userName\":\"Andy Klay\"}]},{},{},{},{}]}");
-		return json.getJSONArray("actions").getJSONObject(0).getJSONArray("causes").getJSONObject(0).getString("userName");
-	}
-	@Override
-	public String getLastBuilder() throws IOException, JSONException{
-		
-		json = new JSONObject("{\"actions\":[{\"causes\":[{\"userName\":\"Andy Klay\"}]},{},{},{},{}]}");
-		return json.getJSONArray("actions").getJSONObject(0).getJSONArray("causes").getJSONObject(0).getString("userName");
-	}
-	@Override
-	public String getColor() throws IOException, JSONException{
-
-		json = new JSONObject("{\"color\":\"red\"}");
-		return json.getString("color");
-	}
-	@Override
-	public String getColor(int nr) throws IOException, JSONException{
-		String color = null;
-		json = new JSONObject("{\"color\":\"red\"}");
-		color = json.getString("result");
-		if(color.equals("SUCCESS")){
-			return "blue";
+	public String getBuilder(int nr){
+		String s = null;
+		try {
+			json = new JSONObject("{\"actions\":[{\"causes\":[{\"userName\":\"Andy Klay\"}]},{},{},{},{}]}");
+			s = json.getJSONArray("actions").getJSONObject(0).getJSONArray("causes").getJSONObject(0).getString("userName");
+		} catch (JSONException e) {
+			s = null;
 		}
-		else return "red";
-	}
-	public int getFirstBuild() throws IOException, JSONException{
-		
-		json = new JSONObject("{\"firstBuild\":{\"number\":20,\"url\":\"http://rambow.it:8080/job/Auto-B-Day/37/\"}}");
-		return json.getJSONObject("firstBuild").getInt("number");
+		return s;
 	}
 	@Override
-	public int getLastGoodBuild() throws IOException, JSONException{
-
-		json = new JSONObject("{\"lastSuccessfulBuild\":{\"number\":21}}");
-		return json.getJSONObject("lastSuccessfulBuild").getInt("number");
+	public String getLastBuilder(){
+		String s = null;
+		try {
+			json = new JSONObject("{\"actions\":[{\"causes\":[{\"userName\":\"Andy Klay\"}]},{},{},{},{}]}");
+			 s = json.getJSONArray("actions").getJSONObject(0).getJSONArray("causes").getJSONObject(0).getString("userName");
+		} catch (JSONException e) {
+			s = null;
+		}
+		return s;
 	}
 	@Override
-	public int getLastBadBuild() throws JSONException, IOException{
-
-		json = new JSONObject("{\"lastFailedBuild\":{\"number\":22}}");
-		return json.getJSONObject("lastFailedBuild").getInt("number");
+	public String getColor(){
+		String s = null;
+		try {
+			json = new JSONObject("{\"color\":\"red\"}");
+			s = json.getString("color");
+		} catch (JSONException e) {
+			s = null;
+		}
+		return s;
 	}
 	@Override
-	public long getLastTimeStamp() throws IOException, JSONException{
-
-		json = new JSONObject("{\"timestamp\":1323541990370}");
-		return json.getLong("timestamp");
+	public String getColor(int nr){
+		String color = null;
+		try {
+			json = new JSONObject("{\"color\":\"red\"}");
+			color = json.getString("result");
+			if(color.equals("SUCCESS")){
+				color = "blue";
+			}
+			else color = "red";
+		} catch (JSONException e) {
+			color = null;
+		}
+		return color;
+	}
+	public int getFirstBuild(){
+		int nr = 0;
+		try {	
+			json = new JSONObject("{\"firstBuild\":{\"number\":20,\"url\":\"http://rambow.it:8080/job/Auto-B-Day/37/\"}}");
+			nr = json.getJSONObject("firstBuild").getInt("number");
+		} catch (JSONException e) {
+			nr = 0;
+		}
+		return nr;
 	}
 	@Override
-	public long getTimeStamp(int nr) throws IOException, JSONException{
-		
-		json = new JSONObject("{\"timestamp\":1323541990370}");
-		return json.getLong("timestamp");
+	public int getLastGoodBuild(){
+		int nr = 0;
+		try {
+			json = new JSONObject("{\"lastSuccessfulBuild\":{\"number\":21}}");
+			nr = json.getJSONObject("lastSuccessfulBuild").getInt("number");
+		} catch (JSONException e) {
+			nr = 0;
+		}
+		return nr;
+	}
+	@Override
+	public int getLastBadBuild(){
+		int nr = 0;
+		try {
+			json = new JSONObject("{\"lastFailedBuild\":{\"number\":22}}");
+			nr = json.getJSONObject("lastFailedBuild").getInt("number");
+		} catch (JSONException e) {
+			nr = 0;
+		}
+		return nr;
+	}
+	@Override
+	public long getLastTimeStamp(){
+		long stamp = 0;
+		try {
+			json = new JSONObject("{\"timestamp\":1323541990370}");
+			stamp = json.getLong("timestamp");
+		} catch (JSONException e) {
+			stamp = 0;
+		}
+		return stamp;
+	}
+	@Override
+	public long getTimeStamp(int nr){
+		long stamp = 0;
+		try {
+			json = new JSONObject("{\"timestamp\":1323541990370}");
+			stamp = json.getLong("timestamp");
+		} catch (JSONException e) {
+			stamp = 0;
+		}
+		return stamp;
 	}
 	@Override
 	public JenkinsVO createJenkinsVO() {
 		JenkinsVO jvo = new JenkinsVO();
-		try {
-			jvo.setColor(getColor());
-			jvo.setFirstBuildNumber(getFirstBuild());
-			jvo.setBuilds(getBuilds());
-			jvo.setLastBuilder(getLastBuilder());
-			jvo.setLastBuildNumber(getLastBuildNr());
-			jvo.setLastFailedBuildNumber(getLastBadBuild());
-			jvo.setLastSuccessfulBuildNumber(getLastGoodBuild());
-			jvo.setTimestamp(getLastTimeStamp());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+		jvo.setColor(getColor());
+		jvo.setFirstBuildNumber(getFirstBuild());
+		jvo.setBuilds(getBuilds());
+		jvo.setLastBuilder(getLastBuilder());
+		jvo.setLastBuildNumber(getLastBuildNr());
+		jvo.setLastFailedBuildNumber(getLastBadBuild());
+		jvo.setLastSuccessfulBuildNumber(getLastGoodBuild());
+		jvo.setTimestamp(getLastTimeStamp());
+
 		return jvo;
 	}	
 }
