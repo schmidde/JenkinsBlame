@@ -46,9 +46,9 @@ public class JenkinsJsonParser extends JenkinsJsonParserAbstract{
 				builds.add(json.getJSONArray("builds").getJSONObject(i).getInt("number"));
 			}	
 		} catch (IOException e) {
-			builds = null;
+			builds.add(-1);
 		} catch (JSONException e) {
-			builds = null;
+			builds.add(-1);
 		}
 		return builds;
 	}

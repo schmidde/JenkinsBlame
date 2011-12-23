@@ -29,17 +29,18 @@ public class JenkinsJsonParserStub extends JenkinsJsonParserAbstract{
 		return nr;
 	}
 	@Override
-	public List<Integer> getBuilds(){
+	public List<Integer> getBuilds(String s){
 		
-		List<Integer> builds = new ArrayList<Integer>();
+		List<Integer> builds = null;
 		
 		try {
-			json = new JSONObject("{\"actions\":[{},{},{},{}],\"description\":\"\",\"displayName\":\"Auto-B-Day\",\"name\":\"Auto-B-Day\",\"url\":\"http://rambow.it:8080/job/Auto-B-Day/\",\"buildable\":true,\"builds\":[{\"number\":22,\"url\":\"http://rambow.it:8080/job/Auto-B-Day/22/\"},{\"number\":21,\"url\":\"http://rambow.it:8080/job/Auto-B-Day/21/\"},{\"number\":20,\"url\":\"http://rambow.it:8080/job/Auto-B-Day/20/\"}]}");
+			builds = new ArrayList<Integer>();
+			json = new JSONObject(s);//z.b. ("{\"actions\":[{},{},{},{}],\"description\":\"\",\"displayName\":\"Auto-B-Day\",\"name\":\"Auto-B-Day\",\"url\":\"http://rambow.it:8080/job/Auto-B-Day/\",\"buildable\":true,\"builds\":[{\"number\":22,\"url\":\"http://rambow.it:8080/job/Auto-B-Day/22/\"},{\"number\":21,\"url\":\"http://rambow.it:8080/job/Auto-B-Day/21/\"},{\"number\":20,\"url\":\"http://rambow.it:8080/job/Auto-B-Day/20/\"}]}");
 			for(int i = 0; i < json.getJSONArray("builds").length(); i++){
 				builds.add(json.getJSONArray("builds").getJSONObject(i).getInt("number"));
 			}
 		} catch (JSONException e) {
-			builds = null;
+			builds.add(-1);
 		}
 		return builds;
 	}

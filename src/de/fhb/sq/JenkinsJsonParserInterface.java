@@ -9,6 +9,7 @@ public interface JenkinsJsonParserInterface{
 	public int getLastBuildNr();
 	public int getLastBuildNr(String s);
 	public List getBuilds();
+	public List getBuilds(String s);
 	public String getBuilder(int nr);
 	public String getLastBuilder();
 	public String getColor();

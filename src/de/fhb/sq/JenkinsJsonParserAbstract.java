@@ -11,6 +11,7 @@ public abstract class JenkinsJsonParserAbstract extends HttpServlet implements J
 	public int getLastBuildNr(){return -1;}
 	public int getLastBuildNr(String s){return -1;}
 	public List getBuilds(){return null;}
+	public List getBuilds(String s){return null;}
 	public String getBuilder(int nr){return null;}
 	public String getLastBuilder(){return null;}
 	public String getColor(){return null;}
