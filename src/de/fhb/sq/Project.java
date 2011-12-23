@@ -23,9 +23,6 @@ public class Project {
 	private List<Build> builds;
 	
 	@Persistent
-	private int firstBuild;
-	
-	@Persistent
 	private int lastFailedBuild;
 	
 	@Persistent
@@ -49,14 +46,6 @@ public class Project {
 
 	public String getName() {
 		return name;
-	}
-
-	public int getFirstBuild() {
-		return firstBuild;
-	}
-
-	public void setFirstBuild(int firstBuild) {
-		this.firstBuild = firstBuild;
 	}
 
 	public int getLastFailedBuild() {

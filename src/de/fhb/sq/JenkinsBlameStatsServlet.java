@@ -28,6 +28,7 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 	public void init(){
 		
 	}
+	
 	public boolean hasJob(String jobName){
 		
 	    String query = "select from " + Project.class.getName();
@@ -42,6 +43,7 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 	    	}
 	    	return false;}
 	}
+	
 	public void initJob() throws IOException, JSONException {
 		Build build;
 		List<Build> builds = new ArrayList<Build>();
@@ -63,15 +65,18 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 		}
 		else System.out.println("Fehler bei Erstellung von JenkinsVO");
 		
-		/*Project newProj = new Project(jobName);
-		newProj.setBuilds();
+		Project newProj = new Project(jobName);
+		newProj.setBuilds(builds);
+		newProj.setLastFailedBuild(jvo.getLastFailedBuild());
+		newProj.setLastSuccessfulBuild(jvo.getLastSuccessfulBuild());
+		
 		try {
-            pm.makePersistent(newProj);
+            //pm.makePersistent(newProj);
         } finally {
             pm.close();
-        }*/
-
+        }
 	}
+	
 	public void addBuild(){}
 	public void checkColor(){}
 	public boolean isCrashed(){

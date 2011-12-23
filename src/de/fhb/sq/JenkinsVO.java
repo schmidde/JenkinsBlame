@@ -4,39 +4,39 @@ import java.util.List;
 
 public class JenkinsVO {
 	
-	private int firstBuildNumber;
+	private int firstBuild;
 	private List builds;
-	private int lastBuildNumber;
-	private int lastFailedBuildNumber;
-	private int lastSuccessfulBuildNumber;
+	private int lastBuild;
+	private int lastFailedBuild;
+	private int lastSuccessfulBuild;
 	private String lastBuilder;
 	private String color;
 	private long timestamp;
 	
 	public JenkinsVO(){}
 
-	public int getLastBuildNumber() {
-		return lastBuildNumber;
+	public int getLastBuild() {
+		return lastBuild;
 	}
 
-	public void setLastBuildNumber(int lastBuildNumber) {
-		this.lastBuildNumber = lastBuildNumber;
+	public void setLastBuildNumber(int lastBuild) {
+		this.lastBuild = lastBuild;
 	}
 
-	public int getLastFailedBuildNumber() {
-		return lastFailedBuildNumber;
+	public int getLastFailedBuild() {
+		return lastFailedBuild;
 	}
 
-	public void setLastFailedBuildNumber(int lastFailedBuildNumber) {
-		this.lastFailedBuildNumber = lastFailedBuildNumber;
+	public void setLastFailedBuildNumber(int lastFailedBuild) {
+		this.lastFailedBuild = lastFailedBuild;
 	}
 
-	public int getLastSuccessfulBuildNumber() {
-		return lastSuccessfulBuildNumber;
+	public int getLastSuccessfulBuild() {
+		return lastSuccessfulBuild;
 	}
 
-	public void setLastSuccessfulBuildNumber(int lastSuccessfulBuildNumber) {
-		this.lastSuccessfulBuildNumber = lastSuccessfulBuildNumber;
+	public void setLastSuccessfulBuildNumber(int lastSuccessfulBuild) {
+		this.lastSuccessfulBuild = lastSuccessfulBuild;
 	}
 
 	public String getLastBuilder() {
@@ -63,12 +63,12 @@ public class JenkinsVO {
 		this.timestamp = timestamp;
 	}
 
-	public int getFirstBuildNumber() {
-		return firstBuildNumber;
+	public int getFirstBuild() {
+		return firstBuild;
 	}
 
-	public void setFirstBuildNumber(int firstBuildNumber) {
-		this.firstBuildNumber = firstBuildNumber;
+	public void setFirstBuildNumber(int firstBuild) {
+		this.firstBuild = firstBuild;
 	}
 
 	public List getBuilds() {
