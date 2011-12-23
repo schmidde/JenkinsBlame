@@ -8,7 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class JenkinsJsonParser implements JenkinsJsonParserInterface{
+public class JenkinsJsonParser extends JenkinsJsonParserAbstract{
 	
 	private String serverUrl, jobName, generalURL, buildNrUrl, tree;
 	private JSONObject json;
@@ -18,119 +18,189 @@ public class JenkinsJsonParser implements JenkinsJsonParserInterface{
 		this.serverUrl = serverUrl;
 		this.jobName = jobName;
 	}
-	
-	public int getLastBuildNr() throws IOException, JSONException{
+	@Override
+	public int getLastBuildNr(){
 		
+		int nr = 0;
 		String tree = "tree=builds[number]";
 		jdc = new JenkinsDataCaller();
-		json = jdc.callJson(getGeneralURL() + tree);
-		return json.getJSONArray("builds").getJSONObject(0).getInt("number");
+		try {
+			json = jdc.callJson(getGeneralURL() + tree);
+			nr = json.getJSONArray("builds").getJSONObject(0).getInt("number");
+		} catch (IOException e) {
+			nr = -1;
+		} catch (JSONException e) {
+			nr = -1;
+		}
+		return nr;
 	}
 	@Override
-	public List<Integer> getBuilds() throws IOException, JSONException{
+	public List<Integer> getBuilds(){
 		
 		List<Integer> builds = new ArrayList<Integer>();
 		jdc = new JenkinsDataCaller();
 		
-		json = jdc.callJson(getGeneralURL());
-		
-		for(int i = 0; i < json.getJSONArray("builds").length(); i++){
+		try {
+			json = jdc.callJson(getGeneralURL());
+			for(int i = 0; i < json.getJSONArray("builds").length(); i++){
 				builds.add(json.getJSONArray("builds").getJSONObject(i).getInt("number"));
+			}	
+		} catch (IOException e) {
+			builds = null;
+		} catch (JSONException e) {
+			builds = null;
 		}
 		return builds;
 	}
 	@Override
-	public String getBuilder(int nr) throws IOException, JSONException{
-		String tree = "tree=actions[causes[userName]]";
+	public String getBuilder(int nr){
+		String tree = "tree=actions[causes[userName]]", s = null;
 		jdc = new JenkinsDataCaller();
-		json = jdc.callJson(getBuildNrURL(nr) + tree);
-		return json.getJSONArray("actions").getJSONObject(0).getJSONArray("causes").getJSONObject(0).getString("userName");
+		try {
+			json = jdc.callJson(getBuildNrURL(nr) + tree);
+			s = json.getJSONArray("actions").getJSONObject(0).getJSONArray("causes").getJSONObject(0).getString("userName");
+		} catch (IOException e) {
+			s = null;
+		} catch (JSONException e) {
+			s = null;
+		}
+		return s;
 	}
 	@Override
-	public String getLastBuilder() throws IOException, JSONException{
-		String tree = "tree=actions[causes[userName]]";
+	public String getLastBuilder(){
+		String tree = "tree=actions[causes[userName]]", s= null;
 		jdc = new JenkinsDataCaller();
-		json = jdc.callJson(getBuildNrURL() + tree);
-		return json.getJSONArray("actions").getJSONObject(0).getJSONArray("causes").getJSONObject(0).getString("userName");
+		try {
+			json = jdc.callJson(getBuildNrURL() + tree);
+			s = json.getJSONArray("actions").getJSONObject(0).getJSONArray("causes").getJSONObject(0).getString("userName");
+		} catch (IOException e) {
+			s = null;
+		} catch (JSONException e) {
+			s = null;
+		}
+		return s;
 	}
 	@Override
-	public String getColor() throws IOException, JSONException{
+	public String getColor(){
 		
-		String tree= "tree=color";
+		String tree= "tree=color", s = null;
 		jdc = new JenkinsDataCaller();
-		json = jdc.callJson(getGeneralURL() + tree);
-		return json.getString("color");
+		try {
+			json = jdc.callJson(getGeneralURL() + tree);
+			s = json.getString("color");
+		} catch (IOException e) {
+			s = null;
+		} catch (JSONException e) {
+			s = null;
+		}
+		return s;
 	}
 	@Override
-	public String getColor(int nr) throws IOException, JSONException{
+	public String getColor(int nr){
 		
 		String tree= "tree=result", color = null;
 		jdc = new JenkinsDataCaller();
-		json = jdc.callJson(getBuildNrURL(nr) + tree);
-		color = json.getString("result");
-		if(color.equals("SUCCESS")){
-			return "blue";
+		try {
+			json = jdc.callJson(getBuildNrURL(nr) + tree);
+			color = json.getString("result");
+			if(color.equals("SUCCESS")){
+				color = "blue";
+			}
+			else color = "red";
+		} catch (IOException e) {
+			color = null;
+		} catch (JSONException e) {
+			color = null;
 		}
-		else return "red";
+		return color;
 	}
 	@Override
-	public int getFirstBuild() throws IOException, JSONException{
-		
+	public int getFirstBuild(){
+		int nr = 0;
 		jdc = new JenkinsDataCaller();
-		json = jdc.callJson(getGeneralURL());
-		return json.getJSONObject("firstBuild").getInt("number");
+		try {
+			json = jdc.callJson(getGeneralURL());
+			nr = json.getJSONObject("firstBuild").getInt("number");
+		} catch (IOException e) {
+			nr = 0;
+		} catch (JSONException e) {
+			nr = 0;
+		}
+		return nr;
 	}
 	@Override
-	public int getLastGoodBuild() throws IOException, JSONException{
-		
+	public int getLastGoodBuild(){
+		int nr = 0;
 		String tree = "tree=lastSuccessfulBuild[number]";
 		jdc = new JenkinsDataCaller();
-		json = jdc.callJson(getGeneralURL() + tree);
-		return json.getJSONObject("lastSuccessfulBuild").getInt("number");
+		try {
+			json = jdc.callJson(getGeneralURL() + tree);
+			nr = json.getJSONObject("lastSuccessfulBuild").getInt("number");
+		} catch (IOException e) {
+			nr = 0;
+		} catch (JSONException e) {
+			nr = 0;
+		}
+		return nr;
 	}
 	@Override
-	public int getLastBadBuild() throws JSONException, IOException{
-		
+	public int getLastBadBuild(){
+		int nr = 0;
 		String tree = "tree=lastFailedBuild[number]";
 		jdc = new JenkinsDataCaller();
-		json = jdc.callJson(getGeneralURL() + tree);
-		return json.getJSONObject("lastFailedBuild").getInt("number");
+		try {
+			json = jdc.callJson(getGeneralURL() + tree);
+			nr = json.getJSONObject("lastFailedBuild").getInt("number");
+		} catch (IOException e) {
+			nr = 0;
+		} catch (JSONException e) {
+			nr = 0;
+		}
+		return nr;
 	}
 	@Override
-	public long getLastTimeStamp() throws IOException, JSONException{
-		
+	public long getLastTimeStamp(){
+		long stamp = 0;
 		String tree = "tree=timestamp";
 		jdc = new JenkinsDataCaller();
-		json = jdc.callJson(getBuildNrURL() + tree);
-		return json.getLong("timestamp");
+		try {
+			json = jdc.callJson(getBuildNrURL() + tree);
+			stamp = json.getLong("timestamp");
+		} catch (IOException e) {
+			stamp = 0;
+		} catch (JSONException e) {
+			stamp = 0;
+		}
+		return stamp;
 	}
 	@Override
-	public long getTimeStamp(int nr) throws IOException, JSONException{
-		
+	public long getTimeStamp(int nr){
+		long stamp = 0;
 		String tree = "tree=timestamp";
 		jdc = new JenkinsDataCaller();
-		json = jdc.callJson(getBuildNrURL(nr) + tree);
-		return json.getLong("timestamp");
+		try {
+			json = jdc.callJson(getBuildNrURL(nr) + tree);
+			stamp = json.getLong("timestamp");
+		} catch (IOException e) {
+			stamp = 0;
+		} catch (JSONException e) {
+			stamp = 0;
+		}
+		return stamp;
 	}
 	@Override
 	public JenkinsVO createJenkinsVO(){
 		JenkinsVO jvo = new JenkinsVO();
-		try {
-			jvo.setColor(getColor());
-			jvo.setFirstBuildNumber(getFirstBuild());
-			jvo.setBuilds(getBuilds());
-			jvo.setLastBuilder(getLastBuilder());
-			jvo.setLastBuildNumber(getLastBuildNr());
-			jvo.setLastFailedBuildNumber(getLastBadBuild());
-			jvo.setLastSuccessfulBuildNumber(getLastGoodBuild());
-			jvo.setTimestamp(getLastTimeStamp());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+		jvo.setColor(getColor());
+		jvo.setFirstBuildNumber(getFirstBuild());
+		jvo.setBuilds(getBuilds());
+		jvo.setLastBuilder(getLastBuilder());
+		jvo.setLastBuildNumber(getLastBuildNr());
+		jvo.setLastFailedBuildNumber(getLastBadBuild());
+		jvo.setLastSuccessfulBuildNumber(getLastGoodBuild());
+		jvo.setTimestamp(getLastTimeStamp());
+
 		return jvo;
 	}
 	//generelle URL fuer JSON-Object des Jobs

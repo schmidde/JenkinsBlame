@@ -8,7 +8,7 @@ import javax.servlet.http.*;
 import org.json.JSONObject;
 import org.json.JSONException;
 
-public class JenkinsJsonParserStub extends HttpServlet implements JenkinsJsonParserInterface{
+public class JenkinsJsonParserStub extends JenkinsJsonParserAbstract{
 
 	private String serverUrl, jobName, generalURL, buildNrUrl, tree;
 	private JSONObject json;
@@ -18,10 +18,15 @@ public class JenkinsJsonParserStub extends HttpServlet implements JenkinsJsonPar
 		this.jobName = jobName;
 	}
 	@Override
-	public int getLastBuildNr() throws IOException, JSONException{
-		
-		json = new JSONObject("{\"builds\":[{\"number\":22},{\"number\":21},{\"number\":20}]}");
-		return json.getJSONArray("builds").getJSONObject(0).getInt("number");
+	public int getLastBuildNr(String s){
+		int nr = 0;
+		try {
+			json = new JSONObject(s);//z.B. ("{\"builds\":[{\"number\":22},{\"number\":21},{\"number\":20}]}");
+			nr = json.getJSONArray("builds").getJSONObject(0).getInt("number");
+		} catch (JSONException e) {
+			nr = -1;
+		}
+		return nr;
 	}
 	@Override
 	public List<Integer> getBuilds() throws IOException, JSONException{
@@ -111,7 +116,5 @@ public class JenkinsJsonParserStub extends HttpServlet implements JenkinsJsonPar
 			e.printStackTrace();
 		}
 		return jvo;
-	}
-
-	
+	}	
 }
