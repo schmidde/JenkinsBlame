@@ -44,6 +44,15 @@
     <enhance_war war="war" />
   </target>
 
+<target name="test" depends="datanucleusenhance" description="Ausführen der Testsuit">
+	<junit>
+		<classpath location="war/WEB-INF/classes"></classpath>
+		<classpath refid="project.classpath"></classpath>
+		<formatter type="brief" usefile="false"/>
+		<test name="de.fhb.sq.TestSuit"></test>
+	</junit>
+</target>	
+	
   <target name="runserver" depends="datanucleusenhance"
       description="Starts the development server.">
     <dev_appserver war="war" />
