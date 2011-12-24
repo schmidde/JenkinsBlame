@@ -1,5 +1,5 @@
 <project>
-  <property name="sdk.dir" location="./appengine-java-sdk-1.6.0" />
+  <property name="sdk.dir" location="./appengine-java-sdk-1.6.1" />
 
   <import file="${sdk.dir}/config/user/ant-macros.xml" />
 
@@ -53,7 +53,7 @@
 	</junit>
 </target>	
 	
-  <target name="runserver" depends="datanucleusenhance"
+  <target name="runserver" depends="test"
       description="Starts the development server.">
     <dev_appserver war="war" />
   </target>
