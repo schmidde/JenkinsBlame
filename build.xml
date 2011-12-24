@@ -58,17 +58,17 @@
     <dev_appserver war="war" />
   </target>
 
-  <target name="update" depends="datanucleusenhance"
+  <target name="update" depends="test"
       description="Uploads the application to App Engine.">
     <appcfg action="update" war="war" />
   </target>
 
-  <target name="update_indexes" depends="datanucleusenhance"
+  <target name="update_indexes" depends="test"
       description="Uploads just the datastore index configuration to App Engine.">
     <appcfg action="update_indexes" war="war" />
   </target>
 
-  <target name="rollback" depends="datanucleusenhance"
+  <target name="rollback" depends="test"
       description="Rolls back an interrupted application update.">
     <appcfg action="rollback" war="war" />
   </target>
