@@ -25,9 +25,14 @@ public class JenkinsBlameServlet extends HttpServlet {
 		resp.setContentType("text/plain");
 		resp.getWriter().println("Hello, world");
 		JenkinsJsonParserInterface jjp = new JenkinsJsonParser(servername, jobname);
+		JenkinsBlameStatsServlet jbs = new JenkinsBlameStatsServlet(servername, jobname);
 		JSONObject json;		
 
 		try {
+				/*if(!jbs.hasJob(jobname)){
+					//jbs.initJob();
+				}*/
+				//System.out.println(jbs.checkColor());
 				req.setAttribute("builder", jjp.getLastBuilder());
 				req.setAttribute("lastBuild", jjp.getLastBuildNr());
 				req.setAttribute("color", jjp.getColor());
