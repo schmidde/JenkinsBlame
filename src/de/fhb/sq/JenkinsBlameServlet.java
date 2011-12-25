@@ -29,10 +29,11 @@ public class JenkinsBlameServlet extends HttpServlet {
 		JSONObject json;		
 
 		try {
-				/*if(!jbs.hasJob(jobname)){
-					//jbs.initJob();
-				}*/
-				//System.out.println(jbs.checkColor());
+				if(!jbs.hasJob(jobname)){
+					jbs.initJob();
+				}
+				else System.out.println("Job bereits in DB");
+				jbs.deleteJob(jobname);
 				req.setAttribute("builder", jjp.getLastBuilder());
 				req.setAttribute("lastBuild", jjp.getLastBuildNr());
 				req.setAttribute("color", jjp.getColor());

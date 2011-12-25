@@ -19,7 +19,7 @@ public class Project {
 	@Persistent
 	private String name;
 	
-	@Persistent
+	@Persistent(mappedBy = "project")
 	private List<Build> builds;
 	
 	@Persistent

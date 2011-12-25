@@ -26,6 +26,9 @@ public class Build {
 	@Persistent
 	private String builder;
 	
+	@Persistent
+	private Project project;
+	
 	public Build(long timestamp, int nr, String color, String builder){
 		this.timestamp = timestamp;
 		this.nr = nr;
@@ -71,6 +74,14 @@ public class Build {
 
 	public void setBuilder(String builder) {
 		this.builder = builder;
+	}
+
+	public Project getProject() {
+		return project;
+	}
+
+	public void setProject(Project project) {
+		this.project = project;
 	}
 	
 
