@@ -30,18 +30,19 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 	}
 	
 	public boolean hasJob(String jobName){
-		
+		boolean res = false;
 	    String query = "select from " + Project.class.getName();
 	    List<Project> projects = (List<Project>) pm.newQuery(query).execute();
 	    
-	    if(projects.isEmpty()){ return false;}
+	    if(projects.isEmpty()){ res = false;}
 	    else{ 
 	    	for(Project p: projects){
 	    		if(jobName.equals(p.getName())){
-	    			return true;
+	    			res = true;
 	    		}
 	    	}
-	    	return false;}
+	    }
+	    return res;
 	}
 	
 	public void initJob() throws IOException, JSONException {
@@ -54,7 +55,6 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 		jvo = jjp.createJenkinsVO();
 		if(jvo != null){
 			for(Object o: jjp.getBuilds()){
-				System.out.println((Integer)o);
 				ts = jjp.getTimeStamp((Integer)o);
 				nr = (Integer)o;
 				color = jjp.getColor((Integer)o);
