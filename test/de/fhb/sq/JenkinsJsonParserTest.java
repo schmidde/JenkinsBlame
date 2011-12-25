@@ -79,4 +79,54 @@ public class JenkinsJsonParserTest {
 		assertEquals("Erwartet wir red", "red", t);
 		assertEquals("Erwartet wir null", null, u);
 	}
+	@Test
+	public void testGetFirstBuild(){
+		int i, j, k;
+		i = jjp.getFirstBuild("{\"firstBuild\":{\"number\":37,\"url\":\"http://rambow.it:8080/job/Auto-B-Day/37/\"}}");
+		j = jjp.getFirstBuild("{}");
+		k = jjp.getFirstBuild("Irgend ein Quatsch");
+		assertEquals("Erwartet wird 37", 37, i);
+		assertEquals("Erwartet wird -1", -1, j);
+		assertEquals("Erwartet wird -1", -1, k);
+	}
+	@Test
+	public void testGetLastGoodBuild(){
+		int i, j, k;
+		i = jjp.getLastGoodBuild("{\"lastSuccessfulBuild\":{\"number\":37}}");
+		j = jjp.getLastGoodBuild("{}");
+		k = jjp.getLastGoodBuild("Irgend ein Quatsch");
+		assertEquals("Erwartet wird 37", 37, i);
+		assertEquals("Erwartet wird -1", -1, j);
+		assertEquals("Erwartet wird -1", -1, k);
+	}
+	@Test
+	public void testGetLastBadBuild(){
+			int i, j, k;
+			i = jjp.getLastBadBuild("{\"lastFailedBuild\":{\"number\":37}}");
+			j = jjp.getLastBadBuild("{}");
+			k = jjp.getLastBadBuild("Irgend ein Quatsch");
+			assertEquals("Erwartet wird 37", 37, i);
+			assertEquals("Erwartet wird -1", -1, j);
+			assertEquals("Erwartet wird -1", -1, k);
+	}
+	@Test
+	public void testGetTimestampBuild(){
+		long l, m, n;
+		l = jjp.getTimeStamp("{\"timestamp\":1323541990370}");
+		m = jjp.getTimeStamp("{\"timestamp\":\"1323541990370\"}");
+		n = jjp.getTimeStamp("");
+		assertEquals("Erwartet wird 1323541990370", 1323541990370L, l);
+		assertEquals("Erwartet wird 1323541990370", 1323541990370L, m);
+		assertEquals("Erwartet wird -1", -1L, n);
+	}
+	@Test
+	public void testGetLastTimestampBuild(){
+		long l, m, n;
+		l = jjp.getLastTimeStamp("{\"timestamp\":1323541990370}");
+		m = jjp.getLastTimeStamp("{\"timestamp\":\"1323541990370\"}");
+		n = jjp.getLastTimeStamp("");
+		assertEquals("Erwartet wird 1323541990370", 1323541990370L, l);
+		assertEquals("Erwartet wird 1323541990370", 1323541990370L, m);
+		assertEquals("Erwartet wird -1", -1L, n);
+	}
 }
