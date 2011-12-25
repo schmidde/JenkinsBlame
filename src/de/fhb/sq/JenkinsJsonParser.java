@@ -122,9 +122,9 @@ public class JenkinsJsonParser implements JenkinsJsonParserInterface{
 			json = jdc.callJson(getGeneralURL());
 			nr = json.getJSONObject("firstBuild").getInt("number");
 		} catch (IOException e) {
-			nr = 0;
+			nr = -1;
 		} catch (JSONException e) {
-			nr = 0;
+			nr = -1;
 		}
 		return nr;
 	}
@@ -137,9 +137,9 @@ public class JenkinsJsonParser implements JenkinsJsonParserInterface{
 			json = jdc.callJson(getGeneralURL() + tree);
 			nr = json.getJSONObject("lastSuccessfulBuild").getInt("number");
 		} catch (IOException e) {
-			nr = 0;
+			nr = -1;
 		} catch (JSONException e) {
-			nr = 0;
+			nr = -1;
 		}
 		return nr;
 	}
@@ -152,9 +152,9 @@ public class JenkinsJsonParser implements JenkinsJsonParserInterface{
 			json = jdc.callJson(getGeneralURL() + tree);
 			nr = json.getJSONObject("lastFailedBuild").getInt("number");
 		} catch (IOException e) {
-			nr = 0;
+			nr = -1;
 		} catch (JSONException e) {
-			nr = 0;
+			nr = -1;
 		}
 		return nr;
 	}
@@ -167,9 +167,9 @@ public class JenkinsJsonParser implements JenkinsJsonParserInterface{
 			json = jdc.callJson(getBuildNrURL() + tree);
 			stamp = json.getLong("timestamp");
 		} catch (IOException e) {
-			stamp = 0;
+			stamp = -1;
 		} catch (JSONException e) {
-			stamp = 0;
+			stamp = -1;
 		}
 		return stamp;
 	}
@@ -182,9 +182,9 @@ public class JenkinsJsonParser implements JenkinsJsonParserInterface{
 			json = jdc.callJson(getBuildNrURL(nr) + tree);
 			stamp = json.getLong("timestamp");
 		} catch (IOException e) {
-			stamp = 0;
+			stamp = -1;
 		} catch (JSONException e) {
-			stamp = 0;
+			stamp = -1;
 		}
 		return stamp;
 	}
