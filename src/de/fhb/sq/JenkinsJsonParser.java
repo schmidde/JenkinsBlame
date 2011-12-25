@@ -12,7 +12,7 @@ public class JenkinsJsonParser implements JenkinsJsonParserInterface{
 	
 	private String serverUrl, jobName, generalURL, buildNrUrl, tree;
 	private JSONObject json;
-	private JenkinsDataCallerInterface jdc = new JenkinsDataCallerStub("");
+	private JenkinsDataCallerInterface jdc;
 	
 	public JenkinsJsonParser(String serverUrl, String jobName){
 		this.serverUrl = serverUrl;

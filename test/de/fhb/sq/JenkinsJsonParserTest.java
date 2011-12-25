@@ -36,4 +36,47 @@ public class JenkinsJsonParserTest {
 		assertEquals("Build soll -1 sein", -1, j);
 		assertEquals("Build soll -1 sein", -1, k);
 	}
+	@Test
+	public void testGetBuilder(){
+		String s, t, u;
+		s = jjp.getBuilder("{\"actions\":[{\"causes\":[{\"userName\":\"Andy Klay\"}]},{},{},{},{}]}");
+		t = jjp.getBuilder("{}");
+		u = jjp.getBuilder(5);
+		assertEquals("Erwartet wird der Name Andy Klay", "Andy Klay", s);
+		assertEquals("Erwartet wird null", null, t);
+		assertEquals("Erwartet wird null", null, u);
+		
+	}
+	@Test
+	public void testGetLastBuilder(){
+		String s, t, u;
+		s = jjp.getBuilder("{\"actions\":[{\"causes\":[{\"userName\":\"Andy Klay\"}]},{},{},{},{}]}");
+		t = jjp.getBuilder("{}");
+		u = jjp.getBuilder(5);
+		assertEquals("Erwartet wird der Name Andy Klay", "Andy Klay", s);
+		assertEquals("Erwartet wird null", null, t);
+		assertEquals("Erwartet wird null", null, u);
+		
+	}
+	@Test
+	public void testGetColor(){
+		String s, t, u;
+		s = jjp.getColor("{\"color\":\"red\"}");
+		t = jjp.getColor("{\"color\":\"green\"}");
+		u = jjp.getColor("");
+		assertEquals("Erwartet wir red", "red", s);
+		assertEquals("Erwartet wir green", "green", t);
+		assertEquals("Erwartet wir null", null, u);
+	}
+	@Test
+	public void testGetColor2(){
+		int nr = 0;
+		String s, t, u;
+		s = jjp.getColor(nr, "{\"result\":\"SUCCESS\"}");
+		t = jjp.getColor(nr, "{\"result\":\"FAILED\"}");
+		u = jjp.getColor(nr, "");
+		assertEquals("Erwartet wir blue", "blue", s);
+		assertEquals("Erwartet wir red", "red", t);
+		assertEquals("Erwartet wir null", null, u);
+	}
 }
