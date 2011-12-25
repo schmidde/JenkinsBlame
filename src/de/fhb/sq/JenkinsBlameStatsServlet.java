@@ -11,7 +11,7 @@ import org.json.JSONException;
 
 public class JenkinsBlameStatsServlet extends HttpServlet{
 	
-	private String server, jobName, stat, builder;
+	private String server, jobName;
 	private JenkinsJsonParserInterface jjp;
 	private PersistenceManager pm = new PMF().get().getPersistenceManager();
 	private JenkinsVO jvo = new JenkinsVO();
@@ -79,16 +79,16 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 	
 	public void addBuild(){}
 	
-	public Build checkColor(){
-		String actualColor, persistentColor;
-		Build persistentBuild, res;
+	public String checkColor(){
+		String actualColor, persistentColor, stat = null;
+		Build persistentBuild;
 		List<Build> builds;
 		String query ="select " + jobName + "from " + Project.class.getName();
 		Project proj = (Project)pm.newQuery(query).execute();
 		
 		builds = proj.getBuilds();
-		build = builds.get(builds.lastIndexOf(builds));
-		persistentColor = build.getColor();
+		persistentBuild = builds.get(builds.lastIndexOf(builds));
+		persistentColor = persistentBuild.getColor();
 		actualColor = jvo.getColor();
 		
 		if(persistentColor.equals("red") && actualColor.equals("red")){
@@ -104,8 +104,7 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 			stat = "successful";
 		}
 		
-		
-		return res;
+		return stat;
 	}
 	
 	public boolean isCrashed(){
