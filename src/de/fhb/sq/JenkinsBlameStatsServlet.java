@@ -11,7 +11,7 @@ import org.json.JSONException;
 
 public class JenkinsBlameStatsServlet extends HttpServlet{
 	
-	private String server, jobName;
+	private String server, jobName, stat, builder;
 	private JenkinsJsonParserInterface jjp;
 	private PersistenceManager pm = new PMF().get().getPersistenceManager();
 	private JenkinsVO jvo = new JenkinsVO();
@@ -19,6 +19,8 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 	public JenkinsBlameStatsServlet(String server, String jobName){
 		this.server = server;
 		this.jobName = jobName;
+		this.jjp = new JenkinsJsonParser(this.server, this.jobName);
+		this.jvo = jjp.createJenkinsVO();
 	}
 	
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -51,8 +53,6 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 		long ts;
 		int nr;
 		String color, builder;
-		jjp = new JenkinsJsonParser(server, jobName);
-		jvo = jjp.createJenkinsVO();
 		if(jvo != null){
 			for(Object o: jjp.getBuilds()){
 				ts = jjp.getTimeStamp((Integer)o);
@@ -78,7 +78,36 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 	}
 	
 	public void addBuild(){}
-	public void checkColor(){}
+	
+	public Build checkColor(){
+		String actualColor, persistentColor;
+		Build persistentBuild, res;
+		List<Build> builds;
+		String query ="select " + jobName + "from " + Project.class.getName();
+		Project proj = (Project)pm.newQuery(query).execute();
+		
+		builds = proj.getBuilds();
+		build = builds.get(builds.lastIndexOf(builds));
+		persistentColor = build.getColor();
+		actualColor = jvo.getColor();
+		
+		if(persistentColor.equals("red") && actualColor.equals("red")){
+			stat = "destroyed";
+		}
+		else if(persistentColor.equals("blue") && actualColor.equals("red")){
+			stat = "destroyed";
+		}
+		else if(persistentColor.equals("red") && actualColor.equals("blue")){
+			stat = "fixed";
+		}
+		else if(persistentColor.equals("blue") && actualColor.equals("blue")){
+			stat = "successful";
+		}
+		
+		
+		return res;
+	}
+	
 	public boolean isCrashed(){
 		return false;
 	}
