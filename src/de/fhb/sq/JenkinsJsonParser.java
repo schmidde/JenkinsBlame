@@ -8,11 +8,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class JenkinsJsonParser extends JenkinsJsonParserAbstract{
+public class JenkinsJsonParser implements JenkinsJsonParserInterface{
 	
 	private String serverUrl, jobName, generalURL, buildNrUrl, tree;
 	private JSONObject json;
-	private JenkinsDataCallerInterface jdc;
+	private JenkinsDataCallerInterface jdc = new JenkinsDataCallerStub("");
 	
 	public JenkinsJsonParser(String serverUrl, String jobName){
 		this.serverUrl = serverUrl;

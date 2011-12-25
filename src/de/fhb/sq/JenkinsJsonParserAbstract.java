@@ -8,10 +8,10 @@ import javax.servlet.http.HttpServlet;
 import org.json.JSONException;
 
 public abstract class JenkinsJsonParserAbstract extends HttpServlet implements JenkinsJsonParserInterface{
+	
+	/* Originalmethoden aus dem Interface JenkinsJsonInterface*/
 	public int getLastBuildNr(){return -1;}
-	public int getLastBuildNr(String s){return -1;}
 	public List getBuilds(){return null;}
-	public List getBuilds(String s){return null;}
 	public String getBuilder(int nr){return null;}
 	public String getLastBuilder(){return null;}
 	public String getColor(){return null;}
@@ -22,4 +22,16 @@ public abstract class JenkinsJsonParserAbstract extends HttpServlet implements J
 	public long getLastTimeStamp(){return -1;}
 	public long getTimeStamp(int nr){return -1;}
 	public JenkinsVO createJenkinsVO(){return null;}
+	
+	/* Methoden nehmen einen String an und erzeugen daraus ein JSONObject. 
+	 * Der JenkinsDataCaller muss nicht mehr aufgerufen werden */
+	public int getLastBuildNr(String jsonString){return -1;}
+	public List getBuilds(String jsonString){return null;}
+	public String getBuilder(String jsonString){return null;}
+	public String getLastBuilder(String jsonString){return null;}
+	public String getColor(String jsonString){return null;}
+	public int getFirstBuild(String jsonString){return -1;}
+	public int getLastGoodBuild(String jsonString){return -1;}
+	public int getLastBadBuild(String jsonString){return -1;}
+	public long getLastTimeStamp(String jsonString){return -1;}
 }

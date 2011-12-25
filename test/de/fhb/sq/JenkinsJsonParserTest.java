@@ -9,7 +9,7 @@ import org.json.JSONException;
 import org.junit.*;
 
 public class JenkinsJsonParserTest {
-	private static JenkinsJsonParserInterface jjp;
+	private static JenkinsJsonParserAbstract jjp;
 	@BeforeClass
 	public static void setUp(){
 		jjp = new JenkinsJsonParserStub("server", "job");

@@ -45,10 +45,10 @@ public class JenkinsJsonParserStub extends JenkinsJsonParserAbstract{
 		return builds;
 	}
 	@Override
-	public String getBuilder(int nr){
+	public String getBuilder(String jsonString){
 		String s = null;
 		try {
-			json = new JSONObject("{\"actions\":[{\"causes\":[{\"userName\":\"Andy Klay\"}]},{},{},{},{}]}");
+			json = new JSONObject(jsonString);
 			s = json.getJSONArray("actions").getJSONObject(0).getJSONArray("causes").getJSONObject(0).getString("userName");
 		} catch (JSONException e) {
 			s = null;
