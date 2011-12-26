@@ -30,14 +30,20 @@ public class JenkinsBlameServlet extends HttpServlet {
 
 		try {
 				if(!jbs.hasJob(jobname)){
+					System.out.println("Job wird eingetragen");
 					jbs.initJob();
 				}
-				else System.out.println("Job bereits in DB");
-				jbs.deleteJob(jobname);
+				else {
+					System.out.println("Job bereits in DB");
+					System.out.println(jbs.checkColor());
+				}
+				
+				
+				//jbs.deleteAllJobs();
+				
 				req.setAttribute("builder", jjp.getLastBuilder());
 				req.setAttribute("lastBuild", jjp.getLastBuildNr());
 				req.setAttribute("color", jjp.getColor());
-				new JenkinsBlameStatsServlet(servername, jobname).initJob();
 				forward("/jenkinsblame.jsp", req, resp);
 		
 		} catch (JSONException e) {

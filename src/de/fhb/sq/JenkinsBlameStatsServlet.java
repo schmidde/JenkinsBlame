@@ -15,7 +15,7 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 	private String server, jobName;
 	private JenkinsJsonParserInterface jjp;
 	private PersistenceManager pm;
-	private JenkinsVO jvo = new JenkinsVO();
+	private JenkinsVO jvo;
 	
 	public JenkinsBlameStatsServlet(String server, String jobName){
 		this.server = server;
@@ -33,21 +33,21 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 	}
 	
 	public boolean hasJob(String jobName){
-		boolean res = false;
+		boolean res = true;
 		
 		pm = new PMF().get().getPersistenceManager();
-	    String query = "select from " + Project.class.getName();
+	    Query query = pm.newQuery(Project.class);
+	    query.setFilter("name == param");
+	    query.declareParameters("String param");
 	    
 	    try{
-	    	List<Project> projects = (List<Project>) pm.newQuery(query).execute();
+	    	List<Project> projects = (List<Project>) query.execute(jobName);
 	    	if(projects.isEmpty()){ res = false;}
 		    else{ 
 		    	for(Project p: projects){
-		    		if(this.jobName.equals(p.getName())){
-		    			res = true;
-		    		}
+		    		System.out.println(p.getName());
 		    	}
-		    }
+		    	res = true;}
 	    }
 	    finally{
 	    	pm.close();
@@ -61,7 +61,8 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 		long ts;
 		int nr;
 		String color, builder;
-		if(jvo != null){
+		
+		if(jvo.getColor() != null){
 			for(Object o: jvo.getBuilds()){
 				ts = jjp.getTimeStamp((Integer)o);
 				nr = (Integer)o;
@@ -69,6 +70,9 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 				builder = jjp.getBuilder((Integer)o);
 				build = new Build(ts, nr, color, builder);
 				builds.add(build);
+			}
+			for(Build b: builds){
+				System.out.println("Builds: " + b.getNr());
 			}
 		}
 		else System.out.println("Fehler bei Erstellung von JenkinsVO");
@@ -100,6 +104,7 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 		Query query = pm.newQuery(Project.class);
 		query.setFilter("name == param");
 		query.declareParameters("String param");
+		query.setOrdering("name asc");
 		
 		try{
 			projects = (List<Project>) query.execute(this.jobName);
@@ -110,7 +115,7 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 					if(!p.getBuilds().isEmpty()){
 						for(Build b: p.getBuilds()){
 							builds.add(b);
-							System.out.println(b.getNr() + " " + b.getBuilder() + " " + b.getTimestamp());
+							System.out.println("\t" + b.getNr() + " " + b.getBuilder() + " " + b.getTimestamp());
 						}
 					}else System.out.println("builds is empty");
 				}
@@ -121,52 +126,67 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 			query.closeAll();
 			pm.close();
 		}
-		persistentBuild = builds.get(0);
-		persistentColor = persistentBuild.getColor();
-		actualColor = jvo.getColor();
-			
-		if(persistentColor.equals("red") && actualColor.equals("red")){
-			stat = "destroyed";
+		if((builds.get(0).getColor() != null) && (jvo.getColor() != null)){
+			persistentColor = builds.get(0).getColor();
+			actualColor = jvo.getColor();
+				
+			if(persistentColor.equals("red") && actualColor.equals("red")){
+				stat = "destroyed";
+			}
+			else if(persistentColor.equals("blue") && actualColor.equals("red")){
+				stat = "destroyed";
+			}
+			else if(persistentColor.equals("red") && actualColor.equals("blue")){
+				stat = "fixed";
+			}
+			else if(persistentColor.equals("blue") && actualColor.equals("blue")){
+				stat = "successful";
+			}
 		}
-		else if(persistentColor.equals("blue") && actualColor.equals("red")){
-			stat = "destroyed";
-		}
-		else if(persistentColor.equals("red") && actualColor.equals("blue")){
-			stat = "fixed";
-		}
-		else if(persistentColor.equals("blue") && actualColor.equals("blue")){
-			stat = "successful";
-		}
-		
 		return stat;
 	}
-	
-	public boolean isCrashed(){
-		return false;
-	}
+		
 	public void deleteJob(String job){
 		pm = new PMF().get().getPersistenceManager();
-	    String query = "select from " + Project.class.getName();
+	    Query query = pm.newQuery(Project.class);
+	    query.setOrdering("name asc");
 	    
 	    try{
-	    	List<Project> projects = (List<Project>) pm.newQuery(query).execute();
+	    	List<Project> projects = (List<Project>) query.execute();
 	    	if(!projects.isEmpty()){
 	    		for(Project p: projects){
-	    			System.out.println(p.getName());
 	    			if(p.getName().equals(job)){
 	    				pm.deletePersistent(p);
 	    			}
 		    	}
 	    	}
 		    else{ 
-		    	System.out.println("keine Projekte mit Name: " + job + "vorhanden");
+		    	System.out.println("keine Projekte mit Name: " + job + " vorhanden");
 		    }
 	    }
 	    finally{
 	    	pm.close();
 	    }
 	}
+	
 	public void deleteAllJobs(){
-		
+		pm = new PMF().get().getPersistenceManager();
+	    Query query = pm.newQuery(Project.class);
+	    query.setOrdering("name asc");
+	    
+	    try{
+	    	List<Project> projects = (List<Project>) query.execute();
+	    	if(!projects.isEmpty()){
+	    		for(Project p: projects){
+	    			pm.deletePersistent(p);
+		    	}
+	    	}
+		    else{ 
+		    	System.out.println("keine Projekte vorhanden");
+		    }
+	    }
+	    finally{
+	    	pm.close();
+	    }
 	}
 }

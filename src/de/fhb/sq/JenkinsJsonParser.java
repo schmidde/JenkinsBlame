@@ -191,15 +191,19 @@ public class JenkinsJsonParser implements JenkinsJsonParserInterface{
 	@Override
 	public JenkinsVO createJenkinsVO(){
 		JenkinsVO jvo = new JenkinsVO();
+		int counter = 0;
 		
-		jvo.setColor(getColor());
-		jvo.setFirstBuildNumber(getFirstBuild());
-		jvo.setBuilds(getBuilds());
-		jvo.setLastBuilder(getLastBuilder());
-		jvo.setLastBuildNumber(getLastBuildNr());
-		jvo.setLastFailedBuildNumber(getLastBadBuild());
-		jvo.setLastSuccessfulBuildNumber(getLastGoodBuild());
-		jvo.setTimestamp(getLastTimeStamp());
+		while(counter < 5){
+			jvo.setColor(getColor());
+			jvo.setFirstBuildNumber(getFirstBuild());
+			jvo.setBuilds(getBuilds());
+			jvo.setLastBuilder(getLastBuilder());
+			jvo.setLastBuildNumber(getLastBuildNr());
+			jvo.setLastFailedBuildNumber(getLastBadBuild());
+			jvo.setLastSuccessfulBuildNumber(getLastGoodBuild());
+			jvo.setTimestamp(getLastTimeStamp());
+			counter++;
+		}
 
 		return jvo;
 	}

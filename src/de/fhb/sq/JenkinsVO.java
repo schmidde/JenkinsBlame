@@ -71,11 +71,11 @@ public class JenkinsVO {
 		this.firstBuild = firstBuild;
 	}
 
-	public List getBuilds() {
+	public List<Integer> getBuilds() {
 		return builds;
 	}
 
-	public void setBuilds(List builds) {
+	public void setBuilds(List<Integer> builds) {
 		this.builds = builds;
 	}
 	
