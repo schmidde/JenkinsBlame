@@ -90,7 +90,9 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
         }
 	}
 	
-	public void addBuild(){}
+	public void addBuild(){
+		//Todo
+	}
 	
 	public String checkColor(){
 		String actualColor, persistentColor, stat = null;
