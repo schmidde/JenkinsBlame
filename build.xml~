@@ -19,7 +19,6 @@
 		<formatter type="brief" usefile="false"/>
 		<test name="de.fhb.sq.TestSuit"></test>
 	</junit>
-  </target>
   <target name="copyjars"
       description="Copies the App Engine JARs to the WAR.">
     <copy
