@@ -62,7 +62,6 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 		List<Build> builds = new ArrayList<Build>();
 		List<Project> projects;
 		
-		//pm = new PMF().get().getPersistenceManager();
 		Query query = pm.newQuery(Project.class);
 		query.setFilter("name == param");
 		query.declareParameters("String param");
@@ -85,10 +84,7 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 			else System.out.println("projects empty!");
 			
 		}
-		finally{
-			//query.closeAll();
-			//pm.close();
-		}
+		finally{}
 		lastPersistentBuild = builds.get(0).getNr();
 		if(nr > lastPersistentBuild){
 			res = true;
@@ -178,13 +174,11 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 			}
 			else System.out.println("Fehler bei Erstellung von JenkinsVO");
 			
-			Project proj = projects.get(0);//Project proj = new Project(this.jobName);
+			Project proj = projects.get(0);
 			proj.setBuilds(builds);
 			proj.setLastSuccessfulBuild(jjp.getLastGoodBuild());
 			proj.setLastFailedBuild(jjp.getLastBadBuild());
 			
-			//pm = new PMF().get().getPersistenceManager();
-			//pm.makePersistent(proj);
         } 
 		finally {
             pm.close();
