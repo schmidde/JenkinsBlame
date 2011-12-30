@@ -55,14 +55,14 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 	    return res;
 	}
 	
-	public boolean isNew(int nr){
+	public boolean isNew(int nr, PersistenceManager pm){
 		boolean res = false;
 		Build build;
 		int lastPersistentBuild;
 		List<Build> builds = new ArrayList<Build>();
 		List<Project> projects;
 		
-		pm = new PMF().get().getPersistenceManager();
+		//pm = new PMF().get().getPersistenceManager();
 		Query query = pm.newQuery(Project.class);
 		query.setFilter("name == param");
 		query.declareParameters("String param");
@@ -86,8 +86,8 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 			
 		}
 		finally{
-			query.closeAll();
-			pm.close();
+			//query.closeAll();
+			//pm.close();
 		}
 		lastPersistentBuild = builds.get(0).getNr();
 		if(nr > lastPersistentBuild){
@@ -146,33 +146,47 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 		query.declareParameters("String param");
 		query.setOrdering("name asc");
 		
-		if(jvo.getColor() != null){
-			for(Object o: jvo.getBuilds()){
-				if(isNew((Integer)o)){
-					ts = jjp.getTimeStamp((Integer)o);
-					nr = (Integer)o;
-					color = jjp.getColor((Integer)o);
-					builder = jjp.getBuilder((Integer)o);
-					build = new Build(ts, nr, color, builder);
-					builds.add(build);
+		try {
+			projects = (List<Project>) query.execute(this.jobName);
+			builds = new ArrayList<Build>();
+			if(!projects.isEmpty()){
+				for(Project p: projects){
+					System.out.println(p.getName());
+					if(!p.getBuilds().isEmpty()){
+						for(Build b: p.getBuilds()){
+							builds.add(b);
+							System.out.println("Build: " + b.getNr() + " " + b.getBuilder());
+						}
+					}else System.out.println("builds is empty");
+				}
+			} else System.out.println("projects empty!");
+			
+			if(jvo.getColor() != null){
+				for(Object o: jvo.getBuilds()){
+					if(isNew((Integer)o, pm)){
+						ts = jjp.getTimeStamp((Integer)o);
+						nr = (Integer)o;
+						color = jjp.getColor((Integer)o);
+						builder = jjp.getBuilder((Integer)o);
+						build = new Build(ts, nr, color, builder);
+						builds.add(build);
+					}
+				}
+				for(Build b: builds){
+					System.out.println("Builds: " + b.getNr());
 				}
 			}
-			for(Build b: builds){
-				System.out.println("Builds: " + b.getNr());
-			}
-		}
-		else System.out.println("Fehler bei Erstellung von JenkinsVO");
-		
-		Project newProj = new Project(jobName);
-		newProj.setBuilds(builds);
-		newProj.setLastFailedBuild(jvo.getLastFailedBuild());
-		newProj.setLastSuccessfulBuild(jvo.getLastSuccessfulBuild());
-		
-		try {
-			pm = new PMF().get().getPersistenceManager();
-			projects = query.execute(jobName);
-            pm.makePersistent(newProj);
-        } finally {
+			else System.out.println("Fehler bei Erstellung von JenkinsVO");
+			
+			Project proj = projects.get(0);//Project proj = new Project(this.jobName);
+			proj.setBuilds(builds);
+			proj.setLastSuccessfulBuild(jjp.getLastGoodBuild());
+			proj.setLastFailedBuild(jjp.getLastBadBuild());
+			
+			//pm = new PMF().get().getPersistenceManager();
+			//pm.makePersistent(proj);
+        } 
+		finally {
             pm.close();
         }
 	}

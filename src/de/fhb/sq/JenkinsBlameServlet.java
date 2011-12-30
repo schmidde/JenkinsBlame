@@ -7,6 +7,8 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 
+import javax.jdo.PersistenceManager;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,7 +28,8 @@ public class JenkinsBlameServlet extends HttpServlet {
 		resp.getWriter().println("Hello, world");
 		JenkinsJsonParserInterface jjp = new JenkinsJsonParser(servername, jobname);
 		JenkinsBlameStatsServlet jbs = new JenkinsBlameStatsServlet(servername, jobname);
-		JSONObject json;		
+		JSONObject json;
+		PersistenceManager pm = PMF.get().getPersistenceManager();
 
 		try {
 				if(!jbs.hasJob(jobname)){
@@ -35,10 +38,13 @@ public class JenkinsBlameServlet extends HttpServlet {
 				}
 				else {
 					System.out.println("Job bereits in DB");
+					if(jbs.isNew(jjp.getLastBuildNr(), pm)){
+						System.out.println("Job wird eingetragen");
+						jbs.addBuild(jobname);
+					}
+					else System.out.println("Job ist nicht neu");
 					System.out.println(jbs.checkColor());
 				}
-				
-				jbs.isNew(jjp.getLastBuildNr());
 				//jbs.deleteAllJobs();
 				
 				req.setAttribute("builder", jjp.getLastBuilder());
@@ -54,6 +60,9 @@ public class JenkinsBlameServlet extends HttpServlet {
 			// TODO Auto-generated catch block
 			resp.getWriter().println("Eine ServletException ist aufgetreten");
 			e.printStackTrace();
+		}
+		finally{
+			pm.close();
 		}
 
 	}
