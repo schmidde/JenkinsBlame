@@ -32,6 +32,23 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 		
 	}
 	
+	public void showAllProjects(){
+		pm = new PMF().get().getPersistenceManager();
+	    Query query = pm.newQuery(Project.class);
+	    
+	    try{
+	    	List<Project> projects = (List<Project>) query.execute();
+	    	if(!projects.isEmpty()){
+	    		for(Project p: projects){
+		    		System.out.println(p.getName());
+		    	}
+	    	} else System.out.println("keine Projekte in DB");
+	    }
+	    finally{
+	    	pm.close();
+	    }
+	}
+	
 	public boolean hasJob(String jobName){
 		boolean res = true;
 		
@@ -86,6 +103,7 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 		}
 		finally{}
 		lastPersistentBuild = builds.get(0).getNr();
+		System.out.println("Neu: " + nr + "\tAlt: " + lastPersistentBuild);
 		if(nr > lastPersistentBuild){
 			res = true;
 		}
@@ -130,7 +148,8 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 	public void addBuild(String jobName){
 		
 		Build build;
-		List<Build> builds = new ArrayList<Build>();
+		List<Build> buildsAlt = new ArrayList<Build>();
+		List<Build> buildsNeu = new ArrayList<Build>();
 		List<Project> projects;
 		long ts;
 		int nr;
@@ -144,20 +163,23 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 		
 		try {
 			projects = (List<Project>) query.execute(this.jobName);
-			builds = new ArrayList<Build>();
 			if(!projects.isEmpty()){
 				for(Project p: projects){
 					System.out.println(p.getName());
 					if(!p.getBuilds().isEmpty()){
 						for(Build b: p.getBuilds()){
-							builds.add(b);
+							buildsAlt.add(b);
 							System.out.println("Build: " + b.getNr() + " " + b.getBuilder());
 						}
 					}else System.out.println("builds is empty");
 				}
 			} else System.out.println("projects empty!");
 			
-			if(jvo.getColor() != null){
+			for(Build b: buildsAlt){
+				buildsNeu.add(b);
+			}
+			
+			if(jjp.getColor() != null){
 				for(Object o: jvo.getBuilds()){
 					if(isNew((Integer)o, pm)){
 						ts = jjp.getTimeStamp((Integer)o);
@@ -165,22 +187,32 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 						color = jjp.getColor((Integer)o);
 						builder = jjp.getBuilder((Integer)o);
 						build = new Build(ts, nr, color, builder);
-						builds.add(build);
+						buildsNeu.add(build);
 					}
 				}
-				for(Build b: builds){
+				System.out.println("Alte Liste: ");
+				for(Build b: buildsAlt){
+					System.out.println("Builds: " + b.getNr());
+				}
+				System.out.println("Neue Liste: ");
+				for(Build b: buildsNeu){
 					System.out.println("Builds: " + b.getNr());
 				}
 			}
 			else System.out.println("Fehler bei Erstellung von JenkinsVO");
 			
-			Project proj = projects.get(0);
-			proj.setBuilds(builds);
+			deleteJob(this.jobName);
+			
+			Project proj = new Project(this.jobName);
+			proj.setBuilds(buildsNeu);
 			proj.setLastSuccessfulBuild(jjp.getLastGoodBuild());
 			proj.setLastFailedBuild(jjp.getLastBadBuild());
 			
+			pm.makePersistent(proj);
+			
         } 
 		finally {
+			query.closeAll();
             pm.close();
         }
 	}

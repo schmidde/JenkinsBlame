@@ -35,7 +35,7 @@ public class JenkinsJsonParserStub extends JenkinsJsonParserAbstract{
 		
 		try {
 			builds = new ArrayList<Integer>();
-			json = new JSONObject(jsonString);//z.b. ("{\"actions\":[{},{},{},{}],\"description\":\"\",\"displayName\":\"Auto-B-Day\",\"name\":\"Auto-B-Day\",\"url\":\"http://rambow.it:8080/job/Auto-B-Day/\",\"buildable\":true,\"builds\":[{\"number\":22,\"url\":\"http://rambow.it:8080/job/Auto-B-Day/22/\"},{\"number\":21,\"url\":\"http://rambow.it:8080/job/Auto-B-Day/21/\"},{\"number\":20,\"url\":\"http://rambow.it:8080/job/Auto-B-Day/20/\"}]}");
+			json = new JSONObject(jsonString);//z.b. ("{\"actions\":[{},{},{},{}],\"description\":\"\",\"displayName\":\"Auto-B-Day\",\"name\":\"Auto-B-Day\",\"url\":\"http://rambow.it:8080/job/Auto-B-Day/\",\"buildable\":true,\"builds\":[{\"number\":151,\"url\":\"http://rambow.it:8080/job/Auto-B-Day/151/\"},{\"number\":150,\"url\":\"http://rambow.it:8080/job/Auto-B-Day/150/\"},{\"number\":149,\"url\":\"http://rambow.it:8080/job/Auto-B-Day/149/\"}]}");
 			for(int i = 0; i < json.getJSONArray("builds").length(); i++){
 				builds.add(json.getJSONArray("builds").getJSONObject(i).getInt("number"));
 			}

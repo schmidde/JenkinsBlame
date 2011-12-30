@@ -51,6 +51,7 @@ public class JenkinsBlameServlet extends HttpServlet {
 					status = jbs.checkColor();
 				}
 				//jbs.deleteAllJobs();
+				//jbs.showAllProjects();
 				
 				//Parameter definieren
 				req.setAttribute("builder", jjp.getLastBuilder());
@@ -59,17 +60,17 @@ public class JenkinsBlameServlet extends HttpServlet {
 				req.setAttribute("status", status);
 				
 				//Webseite anzeigen
-				forward("/jenkinsblame.jsp", req, resp);
+				//forward("/jenkinsblame.jsp", req, resp);
 		
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			resp.getWriter().println("Eine JSONException ist aufgetreten");
 			e.printStackTrace();
-		} catch (ServletException e) {
+		} /*catch (ServletException e) {
 			// TODO Auto-generated catch block
 			resp.getWriter().println("Eine ServletException ist aufgetreten");
 			e.printStackTrace();
-		}
+		}*/
 		finally{
 			pm.close();
 		}
