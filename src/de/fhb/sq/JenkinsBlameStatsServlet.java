@@ -55,7 +55,7 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 	    return res;
 	}
 	
-	public boolean isNew(String jobName){
+	public boolean isNew(int nr){
 		boolean res = false;
 		Build build;
 		int lastPersistentBuild;
@@ -90,7 +90,7 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 			pm.close();
 		}
 		lastPersistentBuild = builds.get(0).getNr();
-		if(jjp.getLastBuildNr() > lastPersistentBuild){
+		if(nr > lastPersistentBuild){
 			res = true;
 		}
 		return res;
@@ -131,8 +131,50 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
         }
 	}
 	
-	public void addBuild(){
-		//Todo
+	public void addBuild(String jobName){
+		
+		Build build;
+		List<Build> builds = new ArrayList<Build>();
+		List<Project> projects;
+		long ts;
+		int nr;
+		String color, builder;
+		
+		pm = new PMF().get().getPersistenceManager();
+		Query query = pm.newQuery(Project.class);
+		query.setFilter("name == param");
+		query.declareParameters("String param");
+		query.setOrdering("name asc");
+		
+		if(jvo.getColor() != null){
+			for(Object o: jvo.getBuilds()){
+				if(isNew((Integer)o)){
+					ts = jjp.getTimeStamp((Integer)o);
+					nr = (Integer)o;
+					color = jjp.getColor((Integer)o);
+					builder = jjp.getBuilder((Integer)o);
+					build = new Build(ts, nr, color, builder);
+					builds.add(build);
+				}
+			}
+			for(Build b: builds){
+				System.out.println("Builds: " + b.getNr());
+			}
+		}
+		else System.out.println("Fehler bei Erstellung von JenkinsVO");
+		
+		Project newProj = new Project(jobName);
+		newProj.setBuilds(builds);
+		newProj.setLastFailedBuild(jvo.getLastFailedBuild());
+		newProj.setLastSuccessfulBuild(jvo.getLastSuccessfulBuild());
+		
+		try {
+			pm = new PMF().get().getPersistenceManager();
+			projects = query.execute(jobName);
+            pm.makePersistent(newProj);
+        } finally {
+            pm.close();
+        }
 	}
 	
 	public String checkColor(){
