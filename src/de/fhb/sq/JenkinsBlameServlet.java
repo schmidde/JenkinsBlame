@@ -38,7 +38,7 @@ public class JenkinsBlameServlet extends HttpServlet {
 					System.out.println(jbs.checkColor());
 				}
 				
-				
+				jbs.isNew(jobname);
 				//jbs.deleteAllJobs();
 				
 				req.setAttribute("builder", jjp.getLastBuilder());

@@ -55,6 +55,47 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 	    return res;
 	}
 	
+	public boolean isNew(String jobName){
+		boolean res = false;
+		Build build;
+		int lastPersistentBuild;
+		List<Build> builds = new ArrayList<Build>();
+		List<Project> projects;
+		
+		pm = new PMF().get().getPersistenceManager();
+		Query query = pm.newQuery(Project.class);
+		query.setFilter("name == param");
+		query.declareParameters("String param");
+		query.setOrdering("name asc");
+		
+		try{
+			
+			projects = (List<Project>) query.execute(this.jobName);
+			builds = new ArrayList<Build>();
+			if(!projects.isEmpty()){
+				for(Project p: projects){
+					System.out.println(p.getName());
+					if(!p.getBuilds().isEmpty()){
+						for(Build b: p.getBuilds()){
+							builds.add(b);
+						}
+					}else System.out.println("builds is empty");
+				}
+			}
+			else System.out.println("projects empty!");
+			
+		}
+		finally{
+			query.closeAll();
+			pm.close();
+		}
+		lastPersistentBuild = builds.get(0).getNr();
+		if(jjp.getLastBuildNr() > lastPersistentBuild){
+			res = true;
+		}
+		return res;
+	}
+	
 	public void initJob() throws IOException, JSONException {
 		Build build;
 		List<Build> builds = new ArrayList<Build>();
@@ -117,7 +158,7 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 					if(!p.getBuilds().isEmpty()){
 						for(Build b: p.getBuilds()){
 							builds.add(b);
-							System.out.println("\t" + b.getNr() + " " + b.getBuilder() + " " + b.getTimestamp());
+							//System.out.println("\t" + b.getNr() + " " + b.getBuilder() + " " + b.getTimestamp());
 						}
 					}else System.out.println("builds is empty");
 				}
