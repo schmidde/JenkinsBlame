@@ -21,6 +21,7 @@ public class JenkinsBlameServlet extends HttpServlet {
 	
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
+		String status = null;
 		this.servername = req.getParameter("servername");
 		this.jobname = req.getParameter("jobname");
 		
@@ -33,23 +34,31 @@ public class JenkinsBlameServlet extends HttpServlet {
 
 		try {
 				if(!jbs.hasJob(jobname)){
+					//Job erstmalig bit allen Builds eintragen
 					System.out.println("Job wird eingetragen");
 					jbs.initJob();
 				}
 				else {
+					//Prüfen ob aktueller Build neuer als letzter eingetragener
 					System.out.println("Job bereits in DB");
 					if(jbs.isNew(jjp.getLastBuildNr(), pm)){
+						//fehlende Builds eintragen
 						System.out.println("Job wird eingetragen");
 						jbs.addBuild(jobname);
+						status = jbs.checkColor();
 					}
 					else System.out.println("Job ist nicht neu");
-					System.out.println(jbs.checkColor());
+					status = jbs.checkColor();
 				}
 				//jbs.deleteAllJobs();
 				
+				//Parameter definieren
 				req.setAttribute("builder", jjp.getLastBuilder());
 				req.setAttribute("lastBuild", jjp.getLastBuildNr());
 				req.setAttribute("color", jjp.getColor());
+				req.setAttribute("status", status);
+				
+				//Webseite anzeigen
 				forward("/jenkinsblame.jsp", req, resp);
 		
 		} catch (JSONException e) {

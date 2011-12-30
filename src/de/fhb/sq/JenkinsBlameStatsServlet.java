@@ -186,6 +186,7 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 	}
 	
 	public String checkColor(){
+		int max = 0, maxIndex = 0;
 		String actualColor, persistentColor, stat = null;
 		Build persistentBuild;
 		List<Build> builds;
@@ -208,7 +209,7 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 					if(!p.getBuilds().isEmpty()){
 						for(Build b: p.getBuilds()){
 							builds.add(b);
-							//System.out.println("\t" + b.getNr() + " " + b.getBuilder() + " " + b.getTimestamp());
+							System.out.println("\t" + b.getNr() + " " + b.getBuilder() + " " + b.getTimestamp());
 						}
 					}else System.out.println("builds is empty");
 				}
@@ -219,8 +220,15 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 			query.closeAll();
 			pm.close();
 		}
+		for(int i = 0; i < builds.size(); i++){
+			if(builds.get(i).getNr() > max){
+				max = builds.get(i).getNr();
+				maxIndex = i;
+			}
+		}
+		
 		if((builds.get(0).getColor() != null) && (jvo.getColor() != null)){
-			persistentColor = builds.get(0).getColor();
+			persistentColor = builds.get(maxIndex).getColor();
 			actualColor = jvo.getColor();
 				
 			if(persistentColor.equals("red") && actualColor.equals("red")){
