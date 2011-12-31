@@ -50,7 +50,6 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 	}
 	public void getBuildsByName(String jobName){
 		
-		Project pro = null;
 		Build build;
 		List<Build> builds = new ArrayList<Build>();
 		
@@ -65,7 +64,6 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 		    	for(Project p: pros){
 		    		if(!p.getBuilds().isEmpty()){
 			    		if(p.getName().equals(jobName)){
-			    			pro = p;
 			    			for(Build b: p.getBuilds()){
 			    				builds.add(b);
 			    				System.out.println(b.getNr() + " " + b.getBuilder());
