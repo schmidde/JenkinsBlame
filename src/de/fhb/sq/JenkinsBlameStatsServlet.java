@@ -40,13 +40,44 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 	    	List<Project> projects = (List<Project>) query.execute();
 	    	if(!projects.isEmpty()){
 	    		for(Project p: projects){
-		    		System.out.println(p.getName());
+		    		System.out.println("showAllProjects: " + p.getName());
 		    	}
 	    	} else System.out.println("keine Projekte in DB");
 	    }
 	    finally{
 	    	pm.close();
 	    }
+	}
+	public void getBuildsByName(String jobName){
+		
+		Project pro = null;
+		Build build;
+		List<Build> builds = new ArrayList<Build>();
+		
+		pm = new PMF().get().getPersistenceManager();
+		Query query = pm.newQuery(Project.class);
+		query.setFilter("name == param");
+	    query.declareParameters("String param");
+	    
+	    try{
+	    	List<Project> pros = (List<Project>) query.execute(jobName);
+	    	if(!pros.isEmpty()){
+		    	for(Project p: pros){
+		    		if(!p.getBuilds().isEmpty()){
+			    		if(p.getName().equals(jobName)){
+			    			pro = p;
+			    			for(Build b: p.getBuilds()){
+			    				builds.add(b);
+			    				System.out.println(b.getNr() + " " + b.getBuilder());
+			    			}
+			    		}
+		    		}
+		    	}
+	    	}
+	    }
+		finally{
+			pm.close();
+		}
 	}
 	
 	public boolean hasJob(String jobName){
@@ -62,7 +93,7 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 	    	if(projects.isEmpty()){ res = false;}
 		    else{ 
 		    	for(Project p: projects){
-		    		System.out.println(p.getName());
+		    		System.out.println("hasJob: " + p.getName());
 		    	}
 		    	res = true;}
 	    }
@@ -72,13 +103,14 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 	    return res;
 	}
 	
-	public boolean isNew(int nr, PersistenceManager pm){
+	public boolean isNew(int nr){
 		boolean res = false;
 		Build build;
-		int lastPersistentBuild;
+		int lastPersistentBuild = 0;
 		List<Build> builds = new ArrayList<Build>();
 		List<Project> projects;
 		
+		pm = new PMF().get().getPersistenceManager();
 		Query query = pm.newQuery(Project.class);
 		query.setFilter("name == param");
 		query.declareParameters("String param");
@@ -90,19 +122,22 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 			builds = new ArrayList<Build>();
 			if(!projects.isEmpty()){
 				for(Project p: projects){
-					System.out.println(p.getName());
+					System.out.println("isNew " + p.getName());
 					if(!p.getBuilds().isEmpty()){
 						for(Build b: p.getBuilds()){
 							builds.add(b);
 						}
+						lastPersistentBuild = builds.get(0).getNr();
 					}else System.out.println("builds is empty");
 				}
 			}
 			else System.out.println("projects empty!");
 			
 		}
-		finally{}
-		lastPersistentBuild = builds.get(0).getNr();
+		finally{
+			pm.close();
+		}
+		
 		System.out.println("Neu: " + nr + "\tAlt: " + lastPersistentBuild);
 		if(nr > lastPersistentBuild){
 			res = true;
@@ -148,11 +183,12 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 	public void addBuild(String jobName){
 		
 		Build build;
-		List<Build> buildsAlt = new ArrayList<Build>();
+		List<Build> buildsPersist = new ArrayList<Build>();
 		List<Build> buildsNeu = new ArrayList<Build>();
 		List<Project> projects;
+		Project project = null;
 		long ts;
-		int nr;
+		int nr, max = 0;
 		String color, builder;
 		
 		pm = new PMF().get().getPersistenceManager();
@@ -164,55 +200,52 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 		try {
 			projects = (List<Project>) query.execute(this.jobName);
 			if(!projects.isEmpty()){
-				for(Project p: projects){
-					System.out.println(p.getName());
-					if(!p.getBuilds().isEmpty()){
-						for(Build b: p.getBuilds()){
-							buildsAlt.add(b);
-							System.out.println("Build: " + b.getNr() + " " + b.getBuilder());
+				project = projects.get(0);
+					if(!project.getBuilds().isEmpty()){
+						for(Build b: project.getBuilds()){
+							buildsPersist.add(b);
+							System.out.println("Persistentes Build: " + b.getNr() + " " + b.getBuilder());
 						}
 					}else System.out.println("builds is empty");
-				}
+				
 			} else System.out.println("projects empty!");
 			
-			for(Build b: buildsAlt){
-				buildsNeu.add(b);
+			for(int i = 0; i < buildsPersist.size(); i++){
+				if(buildsPersist.get(i).getNr() > max){
+					max = buildsPersist.get(i).getNr();
+				}
 			}
 			
 			if(jjp.getColor() != null){
 				for(Object o: jvo.getBuilds()){
-					if(isNew((Integer)o, pm)){
 						ts = jjp.getTimeStamp((Integer)o);
 						nr = (Integer)o;
 						color = jjp.getColor((Integer)o);
 						builder = jjp.getBuilder((Integer)o);
 						build = new Build(ts, nr, color, builder);
 						buildsNeu.add(build);
+				}
+				
+				for(Build b: buildsNeu){
+					if(b.getNr() > max){
+						buildsPersist.add(b);
 					}
 				}
-				System.out.println("Alte Liste: ");
-				for(Build b: buildsAlt){
-					System.out.println("Builds: " + b.getNr());
-				}
-				System.out.println("Neue Liste: ");
-				for(Build b: buildsNeu){
-					System.out.println("Builds: " + b.getNr());
-				}
 			}
-			else System.out.println("Fehler bei Erstellung von JenkinsVO");
+			else System.out.println("Fehler");
 			
-			deleteJob(this.jobName);
 			
-			Project proj = new Project(this.jobName);
-			proj.setBuilds(buildsNeu);
-			proj.setLastSuccessfulBuild(jjp.getLastGoodBuild());
-			proj.setLastFailedBuild(jjp.getLastBadBuild());
+			project.setBuilds(buildsPersist);
+			project.setLastSuccessfulBuild(jjp.getLastGoodBuild());
+			project.setLastFailedBuild(jjp.getLastBadBuild());
 			
-			pm.makePersistent(proj);
-			
+			System.out.println("Persistente Liste: ");
+			for(Build b: buildsPersist){
+				System.out.println("Builds: " + b.getNr());
+			}
         } 
 		finally {
-			query.closeAll();
+			//query.closeAll();
             pm.close();
         }
 	}
@@ -258,6 +291,8 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 				maxIndex = i;
 			}
 		}
+		System.out.println("max: " + max);
+		System.out.println("maxIndex: " + maxIndex);
 		
 		if((builds.get(0).getColor() != null) && (jvo.getColor() != null)){
 			persistentColor = builds.get(maxIndex).getColor();

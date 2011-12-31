@@ -41,7 +41,7 @@ public class JenkinsBlameServlet extends HttpServlet {
 				else {
 					//Prüfen ob aktueller Build neuer als letzter eingetragener
 					System.out.println("Job bereits in DB");
-					if(jbs.isNew(jjp.getLastBuildNr(), pm)){
+					if(jbs.isNew(jjp.getLastBuildNr())){
 						//fehlende Builds eintragen
 						System.out.println("Job wird eingetragen");
 						jbs.addBuild(jobname);
@@ -51,7 +51,9 @@ public class JenkinsBlameServlet extends HttpServlet {
 					status = jbs.checkColor();
 				}
 				//jbs.deleteAllJobs();
-				//jbs.showAllProjects();
+				System.out.println("Alle Projekte: ");
+				//jbs.showAllBuilds();
+				jbs.getBuildsByName(jobname);
 				
 				//Parameter definieren
 				req.setAttribute("builder", jjp.getLastBuilder());
@@ -71,9 +73,7 @@ public class JenkinsBlameServlet extends HttpServlet {
 			resp.getWriter().println("Eine ServletException ist aufgetreten");
 			e.printStackTrace();
 		}*/
-		finally{
-			pm.close();
-		}
+		finally{}
 
 	}
 	public void forward(String jspSite, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
