@@ -31,9 +31,6 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 	public void init(){
 		
 	}
-    public boolean isAdress(String serverName){
-		return serverName.matches("http://[0-9a-z]{2,}\\.[0-9a-z]{2,}\\.[a-z]{2,3}\\:[0-9]{1,4}");
-	}
 	
 	public void showAllProjects(){
 		pm = new PMF().get().getPersistenceManager();
