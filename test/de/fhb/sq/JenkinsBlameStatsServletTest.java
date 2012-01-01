@@ -16,5 +16,9 @@ public class JenkinsBlameStatsServletTest {
 	public void testIsAdress(){
 		
 		assertTrue("Erwarte true", jbs.isAdress("http://jenkins.rambow.it:8080"));
+		assertTrue("Erwarte true", jbs.isAdress("http://irgend.etwas.com:1234"));
+		assertFalse("Erwarte false", jbs.isAdress("jenkins.rambow.it:8080"));
+		assertFalse("Erwarte false", jbs.isAdress("http:/jenkins.rambow.it:8080"));
+		assertFalse("Erwarte false", jbs.isAdress("http://jenkins.rambowit:8080"));
 	}
 }

@@ -31,6 +31,7 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 	public void init(){
 		
 	}
+	//Prüft Vollständigkeit der URL
     public boolean isAdress(String serverName){
 		return serverName.matches("http://[0-9a-z]{2,}\\.[0-9a-z]{2,}\\.[a-z]{2,3}\\:[0-9]{1,4}");
 	}
