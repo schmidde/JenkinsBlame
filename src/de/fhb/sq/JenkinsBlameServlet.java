@@ -33,6 +33,10 @@ public class JenkinsBlameServlet extends HttpServlet {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 
 		try {
+				if(!jbs.isAdress(servername)){
+					req.setAttribute("addr", "Adresse ungueltig. Bitte pruefen...");
+					forward("/jenkinsblame.jsp", req, resp);
+				}
 				if(!jbs.hasJob(jobname)){
 					//Job erstmalig bit allen Builds eintragen
 					System.out.println("Job wird eingetragen");
@@ -68,11 +72,11 @@ public class JenkinsBlameServlet extends HttpServlet {
 			// TODO Auto-generated catch block
 			resp.getWriter().println("Eine JSONException ist aufgetreten");
 			e.printStackTrace();
-		} /*catch (ServletException e) {
+		} catch (ServletException e) {
 			// TODO Auto-generated catch block
 			resp.getWriter().println("Eine ServletException ist aufgetreten");
 			e.printStackTrace();
-		}*/
+		}
 		finally{}
 
 	}
