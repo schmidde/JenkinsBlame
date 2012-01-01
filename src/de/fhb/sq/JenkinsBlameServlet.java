@@ -31,8 +31,9 @@ public class JenkinsBlameServlet extends HttpServlet {
 		JenkinsBlameStatsServlet jbs = new JenkinsBlameStatsServlet(servername, jobname);
 		JSONObject json;
 		PersistenceManager pm = PMF.get().getPersistenceManager();
-
+		
 		try {
+			if(jbs.isAdress(servername)){
 				if(!jbs.hasJob(jobname)){
 					//Job erstmalig bit allen Builds eintragen
 					System.out.println("Job wird eingetragen");
@@ -56,23 +57,29 @@ public class JenkinsBlameServlet extends HttpServlet {
 				jbs.getBuildsByName(jobname);
 				
 				//Parameter definieren
+				req.setAttribute("server", "yes");
 				req.setAttribute("builder", jjp.getLastBuilder());
 				req.setAttribute("lastBuild", jjp.getLastBuildNr());
 				req.setAttribute("color", jjp.getColor());
 				req.setAttribute("status", status);
 				
 				//Webseite anzeigen
-				//forward("/jenkinsblame.jsp", req, resp);
-		
+				forward("/jenkinsblame.jsp", req, resp);
+			}
+			else{ 
+				//Parameter definieren
+				req.setAttribute("server", "no");
+				forward("/jenkinsblame.jsp", req, resp);
+			}
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			resp.getWriter().println("Eine JSONException ist aufgetreten");
 			e.printStackTrace();
-		} /*catch (ServletException e) {
+		} catch (ServletException e) {
 			// TODO Auto-generated catch block
 			resp.getWriter().println("Eine ServletException ist aufgetreten");
 			e.printStackTrace();
-		}*/
+		}
 		finally{}
 
 	}
