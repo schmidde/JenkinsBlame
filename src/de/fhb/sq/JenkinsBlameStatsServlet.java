@@ -68,11 +68,12 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 	    	List<Project> pros = (List<Project>) query.execute(jobName);
 	    	if(!pros.isEmpty()){
 		    	for(Project p: pros){
+		    		System.out.println(p.getName() + ":");
 		    		if(!p.getBuilds().isEmpty()){
 			    		if(p.getName().equals(jobName)){
 			    			for(Build b: p.getBuilds()){
 			    				builds.add(b);
-			    				System.out.println(b.getNr() + " " + b.getBuilder());
+			    				System.out.println("\t" + b.getNr() + " " + b.getBuilder());
 			    			}
 			    		}
 		    		}
@@ -131,7 +132,12 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 						for(Build b: p.getBuilds()){
 							builds.add(b);
 						}
-						lastPersistentBuild = builds.get(0).getNr();
+						if(builds.size() > 0){
+							lastPersistentBuild = builds.get((builds.size()-1)).getNr();
+						}
+						else{
+							lastPersistentBuild = builds.get(0).getNr();
+						}
 					}else System.out.println("builds is empty");
 				}
 			}
@@ -212,17 +218,17 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 			if(!projects.isEmpty()){
 				project = projects.get(0);
 					if(!project.getBuilds().isEmpty()){
+						System.out.println("Liste aus DB:");
 						for(Build b: project.getBuilds()){
-							buildsPersist.add(b);
-							System.out.println("Persistentes Build: " + b.getNr() + " " + b.getBuilder());
+							System.out.println("\t" + b.getNr() + " " + b.getBuilder());
 						}
 					}else System.out.println("builds is empty");
 				
 			} else System.out.println("projects empty!");
 			
-			for(int i = 0; i < buildsPersist.size(); i++){
-				if(buildsPersist.get(i).getNr() > max){
-					max = buildsPersist.get(i).getNr();
+			for(int i = 0; i < project.getBuilds().size(); i++){
+				if(project.getBuilds().get(i).getNr() > max){
+					max = project.getBuilds().get(i).getNr();
 				}
 			}
 			
@@ -238,24 +244,23 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 				
 				for(Build b: buildsNeu){
 					if(b.getNr() > max){
-						buildsPersist.add(b);
+						project.getBuilds().add(b);
 					}
 				}
 			}
 			else System.out.println("Fehler");
 			
-			project.setBuilds(buildsPersist);
+			project.setBuilds(project.getBuilds());
 			project.setLastSuccessfulBuild(jjp.getLastGoodBuild());
 			project.setLastFailedBuild(jjp.getLastBadBuild());
 			
-			System.out.println("Persistente Liste: ");
-			for(Build b: buildsPersist){
+			System.out.println("Neue Liste: ");
+			for(Build b: project.getBuilds()){
 				System.out.println("Builds: " + b.getNr());
 			}
         } 
 		finally {
-			//query.closeAll();
-            pm.close();
+			pm.close();
         }
 	}
 	
@@ -304,8 +309,8 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 		System.out.println("maxIndex: " + maxIndex);
 		
 		if((builds.get(0).getColor() != null) && (jvo.getColor() != null)){
-			persistentColor = builds.get(maxIndex).getColor();
-			actualColor = jvo.getColor();
+			persistentColor = builds.get(maxIndex-1).getColor();
+			actualColor = builds.get(maxIndex).getColor();
 				
 			if(persistentColor.equals("red") && actualColor.equals("red")){
 				stat = "destroyed";
