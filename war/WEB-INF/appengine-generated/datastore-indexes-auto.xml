@@ -1,10 +1,10 @@
-<!-- Indices written at Tue, 3 Jan 2012 18:16:14 UTC -->
+<!-- Indices written at Tue, 3 Jan 2012 20:58:12 UTC -->
 
 <datastore-indexes>
 
-    <!-- Used 6 times in query history -->
+    <!-- Used 1 time in query history -->
     <datastore-index kind="Build" ancestor="true" source="auto">
-        <property name="builds_INTEGER_IDX" direction="asc"/>
+        <property name="nr" direction="asc"/>
     </datastore-index>
 
 </datastore-indexes>

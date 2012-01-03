@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.jdo.PersistenceManager;
+import javax.jdo.Transaction;
 import javax.jdo.Query;
 import javax.servlet.http.*;
 
@@ -15,6 +16,7 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 	private String server, jobName;
 	private JenkinsJsonParserInterface jjp;
 	private PersistenceManager pm;
+	private Transaction tx;
 	private JenkinsVO jvo;
 	
 	public JenkinsBlameStatsServlet(String server, String jobName){
@@ -176,8 +178,14 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 		
 		try {
 			pm = new PMF().get().getPersistenceManager();
+			tx = pm.currentTransaction();
+	        tx.begin();
             pm.makePersistent(newProj);
+            tx.commit();
         } finally {
+        	if(tx.isActive()){
+        		tx.rollback();
+        	}
             pm.close();
         }
 	}
@@ -236,18 +244,9 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 			}
 			else System.out.println("Fehler");
 			
-			pm.close();
-			int count = 0;
-			while(count < 3){
-				deleteJob(this.jobName);
-				count++;
-			}
-			pm = new PMF().get().getPersistenceManager();
-			project = new Project(this.jobName);
 			project.setBuilds(buildsPersist);
 			project.setLastSuccessfulBuild(jjp.getLastGoodBuild());
 			project.setLastFailedBuild(jjp.getLastBadBuild());
-			pm.makePersistent(project);
 			
 			System.out.println("Persistente Liste: ");
 			for(Build b: buildsPersist){
@@ -328,6 +327,7 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 		boolean res = false;
 		
 		pm = new PMF().get().getPersistenceManager();
+		tx = pm.currentTransaction();
 	    Query query = pm.newQuery(Project.class);
 	    query.setOrdering("name asc");
 	    
@@ -336,7 +336,9 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 	    	if(!projects.isEmpty()){
 	    		for(Project p: projects){
 	    			if(p.getName().equals(job)){
+	    				tx.begin();
 	    				pm.deletePersistent(p);
+	    				tx.commit();
 	    			}
 		    	}
 	    		res = false;
@@ -347,6 +349,9 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 		    }
 	    }
 	    finally{
+	    	if(tx.isActive()){
+	    		tx.rollback();
+	    	}
 	    	pm.close();
 	    }
 	    return res;
@@ -354,6 +359,7 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 	
 	public void deleteAllJobs(){
 		pm = new PMF().get().getPersistenceManager();
+		tx = pm.currentTransaction();
 	    Query query = pm.newQuery(Project.class);
 	    query.setOrdering("name asc");
 	    
@@ -361,7 +367,9 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 	    	List<Project> projects = (List<Project>) query.execute();
 	    	if(!projects.isEmpty()){
 	    		for(Project p: projects){
+	    			tx.begin();
 	    			pm.deletePersistent(p);
+	    			tx.commit();
 		    	}
 	    	}
 		    else{ 
@@ -369,6 +377,9 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 		    }
 	    }
 	    finally{
+	    	if(tx.isActive()){
+	    		tx.rollback();
+	    	}
 	    	pm.close();
 	    }
 	}
