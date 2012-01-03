@@ -29,7 +29,7 @@
 		<p>Build Nr. <b><%= nr %></b> 
 			<% if(status.equals("successful")){ %>successful deployed by:<h1 style="color: blue;"><%= builder %></h1>
 			<% }else if(status.equals("destroyed")){ %>destroyed by:<h1 style="color: red;"><%= builder %></h1>
-			<% }else if(status.equals("fixed")){ %>fixed by:<h1 style="color: blue;"><%= builder %></h1><% } %>
+			<% }else if(status.equals("fixed")){ %>fixed by:<h1 style="color: green;"><%= builder %></h1><% } %>
 		</p>
 		<% } %>
 	</div>
