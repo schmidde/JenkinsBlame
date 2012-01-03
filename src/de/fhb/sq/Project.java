@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Extension;
+import javax.jdo.annotations.Order;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
@@ -20,6 +22,7 @@ public class Project {
 	private String name;
 	
 	@Persistent(mappedBy = "project")
+	@Order(extensions = @Extension(vendorName="datanucleus", key="list-ordering", value="nr asc"))
 	private List<Build> builds;
 	
 	@Persistent
