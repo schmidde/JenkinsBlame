@@ -53,7 +53,7 @@ public class JenkinsBlameServlet extends HttpServlet {
 				}
 				//jbs.deleteAllJobs();
 				System.out.println("Alle Projekte: ");
-				//jbs.showAllBuilds();
+				
 				jbs.getBuildsByName(jobname);
 				
 				//Parameter definieren

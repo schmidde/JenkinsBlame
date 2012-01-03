@@ -236,10 +236,18 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 			}
 			else System.out.println("Fehler");
 			
-			
+			pm.close();
+			int count = 0;
+			while(count < 3){
+				deleteJob(this.jobName);
+				count++;
+			}
+			pm = new PMF().get().getPersistenceManager();
+			project = new Project(this.jobName);
 			project.setBuilds(buildsPersist);
 			project.setLastSuccessfulBuild(jjp.getLastGoodBuild());
 			project.setLastFailedBuild(jjp.getLastBadBuild());
+			pm.makePersistent(project);
 			
 			System.out.println("Persistente Liste: ");
 			for(Build b: buildsPersist){
@@ -316,7 +324,9 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 		return stat;
 	}
 		
-	public void deleteJob(String job){
+	public boolean deleteJob(String job){
+		boolean res = false;
+		
 		pm = new PMF().get().getPersistenceManager();
 	    Query query = pm.newQuery(Project.class);
 	    query.setOrdering("name asc");
@@ -329,14 +339,17 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 	    				pm.deletePersistent(p);
 	    			}
 		    	}
+	    		res = false;
 	    	}
 		    else{ 
 		    	System.out.println("keine Projekte mit Name: " + job + " vorhanden");
+		    	res = true;
 		    }
 	    }
 	    finally{
 	    	pm.close();
 	    }
+	    return res;
 	}
 	
 	public void deleteAllJobs(){
