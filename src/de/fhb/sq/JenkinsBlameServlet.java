@@ -33,31 +33,33 @@ public class JenkinsBlameServlet extends HttpServlet {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		
 		try {
-
+			//ist URL korrekt?
 			if(jbs.isAdress(servername)){
+				//ist Job bereits vorhanden?
 				if(!jbs.hasJob(jobname)){
-					//Job erstmalig bit allen Builds eintragen
-					System.out.println("Job wird eingetragen");
+					//Job erstmalig mit allen Builds eintragen
+					System.out.println("Neues Prejekt wird eingetragen");
 					jbs.initJob();
 				}
 				else {
-					//Prüfen ob aktueller Build neuer als letzter eingetragener
-					System.out.println("Job bereits in DB");
+					System.out.println("Dieses Projekt wird bereits beobachtet");
+					//Prüfen ob aktueller Build neuer als letzter Eingetragener ist
 					if(jbs.isNew(jjp.getLastBuildNr())){
 						//fehlende Builds eintragen
-						System.out.println("Job wird eingetragen");
+						System.out.println("Neueste Builds werden gespeichert");
 						jbs.addBuild(jobname);
+						//wie ist denn jetzt der Status?
 						status = jbs.checkColor();
 					}
-					else System.out.println("Job ist nicht neu");
+					else System.out.println("Es hat sich noch nichts getant");
+					//Status bestimmen
 					status = jbs.checkColor();
 				}
 				//jbs.deleteAllJobs();
-				System.out.println("Alle Projekte: ");
-				
+				System.out.println("gespeicherte Builds:");
 				jbs.getBuildsByName(jobname);
 				
-				//Parameter definieren
+				//HTTP-Parameter definieren
 				req.setAttribute("server", "yes");
 				req.setAttribute("builder", jjp.getLastBuilder());
 				req.setAttribute("lastBuild", jjp.getLastBuildNr());
