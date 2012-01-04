@@ -49,11 +49,11 @@
 		<table>
 			<tr>
 				<!-- Zelle fuer Diagramm -->
+				<% for(Overview ov: ovs){ %>
 				<td></td>
 			</tr>
 			<tr>
 				<!-- Zelle fuer Name -->
-				<% for(Overview ov: ovs){ %>
 				<td style="border: 1px solid;"><%= ov.getName() %></td>
 				<% } %>
 			</tr>
