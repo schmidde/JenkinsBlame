@@ -54,8 +54,10 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 	}
 	
 	/** Gibt alle gespeicherten Builds eines gewuenschten Projects aus */
-	public void getBuildsByName(String jobName){
-				
+	public List<Build> getBuildsByName(String jobName){
+		
+		List<Build> builds = new ArrayList();;
+		
 		pm = new PMF().get().getPersistenceManager();
 		Query query = pm.newQuery(Project.class);
 		query.setFilter("name == param");
@@ -69,7 +71,7 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 		    		if(!p.getBuilds().isEmpty()){
 			    		if(p.getName().equals(jobName)){
 			    			for(Build b: p.getBuilds()){
-			    				
+			    				builds.add(b);
 			    				System.out.println("\t" + b.getNr() + " " + b.getBuilder());
 			    			}
 			    		}
@@ -80,6 +82,7 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 		finally{
 			pm.close();
 		}
+	    return builds;
 	}
 	
 	/** Prueft ob das benannte Project bereits in der DB gespeichert ist
@@ -326,6 +329,7 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 	
 	/** sucht alle Mitarbeiter und zaehlt dessen Builds */
 	public void getOverview(){
+		List list;
 		
 	}
 	
