@@ -68,6 +68,7 @@ public class JenkinsBlameServlet extends HttpServlet {
 				req.setAttribute("lastBuild", jjp.getLastBuildNr());
 				req.setAttribute("color", jjp.getColor());
 				req.setAttribute("status", status);
+				req.setAttribute("overview", jbs.getOverviews());
 				
 				//Webseite anzeigen
 				forward("/jenkinsblame.jsp", req, resp);
