@@ -30,14 +30,12 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 		
 	}
 	
-	public void init(){
-		
-	}
-	//Prüft Vollständigkeit der URL
+	/** Prüft Vollstaendigkeit und Gueltigkeit der URL, wenn OK -> true */
     public boolean isAdress(String serverName){
 		return serverName.matches("http://[0-9a-z]{2,}\\.[0-9a-z]{2,}\\.[a-z]{2,3}\\:[0-9]{1,4}");
 	}
 	
+    /** Gibt alle gespeicherten Projecte auf Konsole aus*/
 	public void showAllProjects(){
 		pm = new PMF().get().getPersistenceManager();
 	    Query query = pm.newQuery(Project.class);
@@ -54,6 +52,8 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 	    	pm.close();
 	    }
 	}
+	
+	/** Gibt alle gespeicherten Builds eines gewuenschten Projects aus */
 	public void getBuildsByName(String jobName){
 				
 		pm = new PMF().get().getPersistenceManager();
@@ -82,6 +82,7 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 		}
 	}
 	
+	/** Prueft ob das benannte Project bereits in der DB gespeichert ist, wenn ja -> true */	
 	public boolean hasJob(String jobName){
 		boolean res = true;
 		
@@ -101,6 +102,7 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 	    return res;
 	}
 	
+	/** Prueft ob Builds vom CI-Server neuer als gespeicherte Builds sind, wenn ja -> true */
 	public boolean isNew(int nr){
 		
 		boolean res = false;
@@ -144,14 +146,18 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 		return res;
 	}
 	
-	public void initJob() throws IOException, JSONException {
+	/** Erstmaliges eintragen des Projects und aller Builds */
+	public void initJob(){
+		
 		Build build;
 		List<Build> builds = new ArrayList<Build>();
 		long ts;
 		int nr;
 		String color, builder;
 		
+		//ist ueberhaupt etwas vorhanden?
 		if(jvo.getColor() != null){
+			//Alles wichtige vom CI-Server parsen und in einer ArrayList speichern
 			for(Object o: jvo.getBuilds()){
 				ts = jjp.getTimeStamp((Integer)o);
 				nr = (Integer)o;
@@ -160,17 +166,16 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 				build = new Build(ts, nr, color, builder);
 				builds.add(build);
 			}
-			for(Build b: builds){
-				System.out.println("Builds: " + b.getNr());
-			}
 		}
 		else System.out.println("Fehler bei Erstellung von JenkinsVO");
 		
+		//Neues zu speicherndes Objekt erstellen und befuellen
 		Project newProj = new Project(jobName);
 		newProj.setBuilds(builds);
 		newProj.setLastFailedBuild(jvo.getLastFailedBuild());
 		newProj.setLastSuccessfulBuild(jvo.getLastSuccessfulBuild());
 		
+		//in einer Transaktion versuchen das Obj. im Datastore zu speichern
 		try {
 			pm = new PMF().get().getPersistenceManager();
 			tx = pm.currentTransaction();
