@@ -93,11 +93,7 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 	    try{
 	    	List<Project> projects = (List<Project>) query.execute(jobName);
 	    	if(projects.isEmpty()){ res = false;}
-		    else{ 
-		    	for(Project p: projects){
-		    		System.out.println("hasJob: " + p.getName());
-		    	}
-		    	res = true;}
+		    else{ res = true;}
 	    }
 	    finally{
 	    	pm.close();
