@@ -55,10 +55,7 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 	    }
 	}
 	public void getBuildsByName(String jobName){
-		
-		Build build;
-		List<Build> builds = new ArrayList<Build>();
-		
+				
 		pm = new PMF().get().getPersistenceManager();
 		Query query = pm.newQuery(Project.class);
 		query.setFilter("name == param");
@@ -72,7 +69,7 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 		    		if(!p.getBuilds().isEmpty()){
 			    		if(p.getName().equals(jobName)){
 			    			for(Build b: p.getBuilds()){
-			    				builds.add(b);
+			    				
 			    				System.out.println("\t" + b.getNr() + " " + b.getBuilder());
 			    			}
 			    		}
