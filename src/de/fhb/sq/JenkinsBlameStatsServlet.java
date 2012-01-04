@@ -190,10 +190,10 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
         }
 	}
 	
+	/** neueste Builds zum Datastore hinzufuegen */
 	public void addBuild(String jobName){
 		
 		Build build;
-		List<Build> buildsPersist = new ArrayList<Build>();
 		List<Build> buildsNeu = new ArrayList<Build>();
 		List<Project> projects;
 		Project project = null;
@@ -207,25 +207,21 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 		query.declareParameters("String param");
 		query.setOrdering("name asc");
 		
+		//Versuche benanntes Obj. aus DS zu holen
 		try {
 			projects = (List<Project>) query.execute(this.jobName);
 			if(!projects.isEmpty()){
-				project = projects.get(0);
-					if(!project.getBuilds().isEmpty()){
-						System.out.println("Liste aus DB:");
-						for(Build b: project.getBuilds()){
-							System.out.println("\t" + b.getNr() + " " + b.getBuilder());
-						}
-					}else System.out.println("builds is empty");
-				
-			} else System.out.println("projects empty!");
+				project = projects.get(0);							
+			} 
+			else System.out.println("projects empty!");
 			
+			//Suche das neueste Build
 			for(int i = 0; i < project.getBuilds().size(); i++){
 				if(project.getBuilds().get(i).getNr() > max){
 					max = project.getBuilds().get(i).getNr();
 				}
 			}
-			
+			//erstellt neue Liste mit Build-Objekten vom CI-Server
 			if(jjp.getColor() != null){
 				for(Object o: jvo.getBuilds()){
 						ts = jjp.getTimeStamp((Integer)o);
@@ -236,6 +232,7 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 						buildsNeu.add(build);
 				}
 				
+				//fuegt alle neuen Builds zur Liste der gespeicherten Builds hinzu
 				for(Build b: buildsNeu){
 					if(b.getNr() > max){
 						project.getBuilds().add(b);
@@ -244,16 +241,13 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 			}
 			else System.out.println("Fehler");
 			
+			//aktualisiert das Projekt
 			project.setBuilds(project.getBuilds());
 			project.setLastSuccessfulBuild(jjp.getLastGoodBuild());
 			project.setLastFailedBuild(jjp.getLastBadBuild());
-			
-			System.out.println("Neue Liste: ");
-			for(Build b: project.getBuilds()){
-				System.out.println("Builds: " + b.getNr());
-			}
         } 
 		finally {
+			//speichert das geaenderte Obj.
 			pm.close();
         }
 	}
