@@ -2,6 +2,7 @@ package de.fhb.sq;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.jdo.PersistenceManager;
@@ -327,10 +328,45 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 		return stat;
 	}
 	
-	/** sucht alle Mitarbeiter und zaehlt dessen Builds */
-	public void getOverview(){
-		List list;
+	/** sucht alle Mitarbeiter und zaehlt dessen Builds 
+	 * @return Liste mit Overview-Obkekten
+	 */
+	public List<Overview> getOverviews(){
 		
+		int rot = 0, blau = 0;
+		List<Build> builds;
+		List<String> member = new ArrayList();
+		Overview overview;
+		List<Overview> overviews = new ArrayList();
+		
+		builds = getBuildsByName(this.jobName);
+		
+		for(Build b: builds){
+			if(!member.contains(b.getBuilder())){
+				member.add(b.getBuilder());
+				System.out.println(b.getBuilder());
+			}
+		}
+		
+		for(String name: member){
+			for(Build b: builds){
+				if(b.getBuilder().equals(name)){
+					if(b.getColor().equals("red")){
+						rot++;
+					}
+					else if(b.getColor().equals("blue")){
+						blau++;
+					}
+				}
+			}
+			System.out.println(name + "\t" + blau + "\t" + rot);
+			overview = new Overview(name, blau, rot);
+			overviews.add(overview);
+			
+			rot = 0;
+			blau = 0;
+		}
+		return overviews;		
 	}
 	
 	/** loescht benanntes Projekt aus dem DS 

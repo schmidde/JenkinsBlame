@@ -56,8 +56,9 @@ public class JenkinsBlameServlet extends HttpServlet {
 					status = jbs.checkColor();
 				}
 				//jbs.deleteAllJobs();
-				System.out.println("gespeicherte Builds:");
-				jbs.getBuildsByName(jobname);
+				//System.out.println("gespeicherte Builds:");
+				//jbs.getBuildsByName(jobname);
+				jbs.getOverviews();
 				
 				//HTTP-Parameter definieren
 				req.setAttribute("server", "yes");
