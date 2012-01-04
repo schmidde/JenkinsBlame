@@ -252,63 +252,68 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
         }
 	}
 	
+	/** Prueft die Veraenderung vom letzten zum aktuellen Build
+	 * @return gibt entweder "succsessful", "fixed" oder "destroyed"
+	 */
 	public String checkColor(){
+		
 		int max = 0, maxIndex = 0;
 		String actualColor, persistentColor, stat = null;
-		Build persistentBuild;
 		List<Build> builds;
 		List<Project> projects;
-		Project proj = null;
 		
 		pm = new PMF().get().getPersistenceManager();
-		
 		Query query = pm.newQuery(Project.class);
 		query.setFilter("name == param");
 		query.declareParameters("String param");
 		query.setOrdering("name asc");
 		
+		//Holt alle Builds eines Projekts
 		try{
 			projects = (List<Project>) query.execute(this.jobName);
 			builds = new ArrayList<Build>();
 			if(!projects.isEmpty()){
 				for(Project p: projects){
-					System.out.println(p.getName());
 					if(!p.getBuilds().isEmpty()){
 						for(Build b: p.getBuilds()){
 							builds.add(b);
-							System.out.println("\t" + b.getNr() + " " + b.getBuilder() + " " + b.getTimestamp());
 						}
 					}else System.out.println("builds is empty");
 				}
 			}
-			else System.out.println("projects empty!");
+			else System.out.println("projects is empty!");
 		}
 		finally{
 			query.closeAll();
 			pm.close();
 		}
+		
+		//Sucht den neuesten Build und dessen Index in der ArrayList
 		for(int i = 0; i < builds.size(); i++){
 			if(builds.get(i).getNr() > max){
 				max = builds.get(i).getNr();
 				maxIndex = i;
 			}
 		}
-		System.out.println("max: " + max);
-		System.out.println("maxIndex: " + maxIndex);
-		
+		//ist irgendwas vorhanden?
 		if((builds.get(0).getColor() != null) && (jvo.getColor() != null)){
+			//Vergleicht den letzten und vorletzten Build aus dem DS
 			persistentColor = builds.get(maxIndex-1).getColor();
 			actualColor = builds.get(maxIndex).getColor();
-				
+			
+			//vorher und weiterhin kaputt
 			if(persistentColor.equals("red") && actualColor.equals("red")){
 				stat = "destroyed";
 			}
+			//vorher ok, jetzt kaputt
 			else if(persistentColor.equals("blue") && actualColor.equals("red")){
 				stat = "destroyed";
 			}
+			//vorher kaputt, jetzt ok
 			else if(persistentColor.equals("red") && actualColor.equals("blue")){
 				stat = "fixed";
 			}
+			//vorher und weiterhin ok
 			else if(persistentColor.equals("blue") && actualColor.equals("blue")){
 				stat = "successful";
 			}
