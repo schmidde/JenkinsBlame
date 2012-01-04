@@ -324,6 +324,11 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 		return stat;
 	}
 	
+	/** sucht alle Mitarbeiter und zaehlt dessen Builds */
+	public void getOverview(){
+		
+	}
+	
 	/** loescht benanntes Projekt aus dem DS 
 	 * @return true, wenn erfolgreich geloescht
 	 */
