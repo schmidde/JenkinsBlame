@@ -102,8 +102,8 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 	}
 	
 	public boolean isNew(int nr){
+		
 		boolean res = false;
-		Build build;
 		int lastPersistentBuild = 0;
 		List<Build> builds = new ArrayList<Build>();
 		List<Project> projects;
@@ -120,7 +120,6 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 			builds = new ArrayList<Build>();
 			if(!projects.isEmpty()){
 				for(Project p: projects){
-					System.out.println("isNew " + p.getName());
 					if(!p.getBuilds().isEmpty()){
 						for(Build b: p.getBuilds()){
 							builds.add(b);
@@ -135,13 +134,10 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 				}
 			}
 			else System.out.println("projects empty!");
-			
 		}
 		finally{
 			pm.close();
 		}
-		
-		System.out.println("Neu: " + nr + "\tAlt: " + lastPersistentBuild);
 		if(nr > lastPersistentBuild){
 			res = true;
 		}
