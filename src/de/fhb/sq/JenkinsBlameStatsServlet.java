@@ -9,8 +9,6 @@ import javax.jdo.Transaction;
 import javax.jdo.Query;
 import javax.servlet.http.*;
 
-import org.json.JSONException;
-
 public class JenkinsBlameStatsServlet extends HttpServlet{
 	
 	private String server, jobName;
@@ -30,7 +28,9 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 		
 	}
 	
-	/** Prüft Vollstaendigkeit und Gueltigkeit der URL, wenn OK -> true */
+	/** Prüft Vollstaendigkeit und Gueltigkeit der URL
+	 * @return true, wenn ok
+	 */
     public boolean isAdress(String serverName){
 		return serverName.matches("http://[0-9a-z]{2,}\\.[0-9a-z]{2,}\\.[a-z]{2,3}\\:[0-9]{1,4}");
 	}
@@ -82,7 +82,9 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 		}
 	}
 	
-	/** Prueft ob das benannte Project bereits in der DB gespeichert ist, wenn ja -> true */	
+	/** Prueft ob das benannte Project bereits in der DB gespeichert ist
+	 * @return true, wenn vorhanden
+	 */	
 	public boolean hasJob(String jobName){
 		boolean res = true;
 		
@@ -102,7 +104,8 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 	    return res;
 	}
 	
-	/** Prueft ob Builds vom CI-Server neuer als gespeicherte Builds sind, wenn ja -> true */
+	/** Prueft ob Builds vom CI-Server neuer als gespeicherte Builds sind
+	 * @return true, wenn Builds neuer sind*/
 	public boolean isNew(int nr){
 		
 		boolean res = false;
@@ -253,7 +256,7 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 	}
 	
 	/** Prueft die Veraenderung vom letzten zum aktuellen Build
-	 * @return gibt entweder "succsessful", "fixed" oder "destroyed"
+	 * @return "succsessful", "fixed" oder "destroyed"
 	 */
 	public String checkColor(){
 		
@@ -320,7 +323,10 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 		}
 		return stat;
 	}
-		
+	
+	/** loescht benanntes Projekt aus dem DS 
+	 * @return true, wenn erfolgreich geloescht
+	 */
 	public boolean deleteJob(String job){
 		boolean res = false;
 		
@@ -355,6 +361,7 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 	    return res;
 	}
 	
+	/** löscht alle Projekte aus dem DS */
 	public void deleteAllJobs(){
 		pm = new PMF().get().getPersistenceManager();
 		tx = pm.currentTransaction();
