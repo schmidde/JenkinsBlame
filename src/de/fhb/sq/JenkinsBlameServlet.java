@@ -58,7 +58,9 @@ public class JenkinsBlameServlet extends HttpServlet {
 				//jbs.deleteAllJobs();
 				//System.out.println("gespeicherte Builds:");
 				//jbs.getBuildsByName(jobname);
-				jbs.getOverviews();
+				for(Overview o: jbs.getOverviews()){
+					System.out.println(o.getName() + "\t" + o.getBlau() + "\t" + o.getRot());
+				}
 				
 				//HTTP-Parameter definieren
 				req.setAttribute("server", "yes");

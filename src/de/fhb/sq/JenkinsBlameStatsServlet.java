@@ -359,7 +359,6 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 					}
 				}
 			}
-			System.out.println(name + "\t" + blau + "\t" + rot);
 			overview = new Overview(name, blau, rot);
 			overviews.add(overview);
 			
