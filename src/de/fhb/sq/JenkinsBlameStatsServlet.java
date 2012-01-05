@@ -305,24 +305,32 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 		//ist irgendwas vorhanden?
 		if((builds.get(0).getColor() != null) && (jvo.getColor() != null)){
 			//Vergleicht den letzten und vorletzten Build aus dem DS
-			persistentColor = builds.get(maxIndex-1).getColor();
-			actualColor = builds.get(maxIndex).getColor();
+			if(maxIndex > 0){
+				persistentColor = builds.get(maxIndex-1).getColor();
+				actualColor = builds.get(maxIndex).getColor();			
 			
-			//vorher und weiterhin kaputt
-			if(persistentColor.equals("red") && actualColor.equals("red")){
-				stat = "destroyed";
+				//vorher und weiterhin kaputt
+				if(persistentColor.equals("red") && actualColor.equals("red")){
+					stat = "destroyed";
+				}
+				//vorher ok, jetzt kaputt
+				else if(persistentColor.equals("blue") && actualColor.equals("red")){
+					stat = "destroyed";
+				}
+				//vorher kaputt, jetzt ok
+				else if(persistentColor.equals("red") && actualColor.equals("blue")){
+					stat = "fixed";
+				}
+				//vorher und weiterhin ok
+				else if(persistentColor.equals("blue") && actualColor.equals("blue")){
+					stat = "successful";
+				}
 			}
-			//vorher ok, jetzt kaputt
-			else if(persistentColor.equals("blue") && actualColor.equals("red")){
-				stat = "destroyed";
-			}
-			//vorher kaputt, jetzt ok
-			else if(persistentColor.equals("red") && actualColor.equals("blue")){
-				stat = "fixed";
-			}
-			//vorher und weiterhin ok
-			else if(persistentColor.equals("blue") && actualColor.equals("blue")){
-				stat = "successful";
+			else{ 
+				//einziger Build
+				persistentColor = builds.get(0).getColor();
+				if(persistentColor.equals("blue")) stat = "successful";
+				else if(persistentColor.equals("red")) stat = "destroyed";
 			}
 		}
 		return stat;

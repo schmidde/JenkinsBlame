@@ -47,16 +47,16 @@
 			
 		%>
 		<table>
+			<% for(Overview ov: ovs){ %>
 			<tr>
 				<!-- Zelle fuer Diagramm -->
-				<% for(Overview ov: ovs){ %>
 				<td></td>
 			</tr>
 			<tr>
 				<!-- Zelle fuer Name -->
 				<td style="border: 1px solid;"><%= ov.getName() %></td>
-				<% } %>
 			</tr>
+		<% } %>
 		</table>
 		<% } %>
 	</div>
