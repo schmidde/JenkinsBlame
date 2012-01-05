@@ -31,9 +31,9 @@
 	<!-- Blame-Content -->
 	<div style="height: 66%;"><% if(status != null){ %>
 		<p style="font-size: 50;">Build Nr. <b><%= nr %></b> 
-			<% if(status.equals("successful")){ %>successful deployed by:<h1 style="color: blue; font-size: 100; text-align: center;"><%= builder %></h1>
-			<% }else if(status.equals("destroyed")){ %>destroyed by:<h1 style="color: red; font-size: 100; text-align: center;"><%= builder %></h1>
-			<% }else if(status.equals("fixed")){ %>fixed by:<h1 style="color: green; font-size: 100; text-align: center;"><%= builder %></h1><% } %>
+			<% if(status.equals("successful")){ %>successful deployed by:<h1 style="color: blue; font-size: 100; text-align: center;"><nobr><%= builder %></nobr></h1>
+			<% }else if(status.equals("destroyed")){ %>destroyed by:<h1 style="color: red; font-size: 100; text-align: center;"><nobr><%= builder %></nobr></h1>
+			<% }else if(status.equals("fixed")){ %>fixed by:<h1 style="color: green; font-size: 100; text-align: center;"><nobr><%= builder %></nobr></h1><% } %>
 		</p>
 		<% } %>
 		<% } else if(server.equals("no")){ %>URL nicht korrekt. Bitte korrigieren...
