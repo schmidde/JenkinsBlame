@@ -47,16 +47,28 @@
 			
 		%>
 		<table>
+			<tr>
 			<% for(Overview ov: ovs){ %>
-			<tr>
-				<!-- Zelle fuer Diagramm -->
-				<td></td>
+				<td style="vertical-align: bottom;">
+					<table>
+						<tr>
+							<td>
+								<table>
+									<tr>
+										<td style="vertical-align: bottom;"><p style="height: <%= (ov.getBlau()*10) %>px; width: 25px; background-color: blue"></P></td><td style="vertical-align: bottom;"><p style="height: <%= (ov.getRot()*10) %>px; width: 25px; background-color: red"></p></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td style="border-top: 1px solid;">
+								<b><%= ov.getName() %></b>
+							</td>
+						</tr>
+					</table>
+				</td>
+			<% } %>
 			</tr>
-			<tr>
-				<!-- Zelle fuer Name -->
-				<td style="border: 1px solid;"><%= ov.getName() %></td>
-			</tr>
-		<% } %>
 		</table>
 		<% } %>
 	</div>
