@@ -440,4 +440,21 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 	    	pm.close();
 	    }
 	}
+
+	public String getServer() {
+		return server;
+	}
+
+	public void setServer(String server) {
+		this.server = server;
+	}
+
+	public String getJobName() {
+		return jobName;
+	}
+
+	public void setJobName(String jobName) {
+		this.jobName = jobName;
+	}
+	
 }

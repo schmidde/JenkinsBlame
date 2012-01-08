@@ -1,4 +1,4 @@
-<project name="JenkinsBlame" default="cob-rep" basedir=".">
+<project name="JenkinsBlame" default="test" basedir=".">
   <property name="sdk.dir" location="./appengine-java-sdk-1.6.1" />
 
   <import file="${sdk.dir}/config/user/ant-macros.xml" />
@@ -9,10 +9,15 @@
     <fileset dir="${lib.dir}">
       <include name="**/*.jar" />
     </fileset>
+  	 <fileset dir="${lib.dir}">
+  	      <include name="*.jar" />
+  	    </fileset>
     <fileset dir="${sdk.dir}/lib">
       <include name="shared/**/*.jar" />
     </fileset>
   </path>
+
+  <taskdef classpathref="project.classpath" resource="tasks.properties" />
 	
   <target name="init">
   	<mkdir dir="${inst.dir}" />
@@ -99,7 +104,7 @@
   <!-- =================================
         target: Cobertura
   ================================= -->
-  <taskdef classpathref="project.classpath" resource="tasks.properties" />
+  
   <target name="cob-instr" depends="compile">
     <cobertura-instrument todir="${inst.dir}" datafile="${cobdata}">
       <fileset dir="${classes.dir}">
