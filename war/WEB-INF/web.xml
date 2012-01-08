@@ -12,14 +12,6 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>JenkinsBlame</servlet-name>
 		<url-pattern>/jenkinsblame</url-pattern>
 	</servlet-mapping>
-	<servlet>
-		<servlet-name>JenkinsBlameStats</servlet-name>
-		<servlet-class>de.fhb.sq.JenkinsBlameStatsServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>JenkinsBlameStats</servlet-name>
-		<url-pattern>/jenkinsblamestats</url-pattern>
-	</servlet-mapping>
 	<welcome-file-list>
 		<welcome-file>jenkinsblame.jsp</welcome-file>
 	</welcome-file-list>
