@@ -1,16 +1,13 @@
 package de.fhb.sq;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Transaction;
 import javax.jdo.Query;
-import javax.servlet.http.*;
 
-public class JenkinsBlameStatsServlet extends HttpServlet{
+public class JenkinsBlameStatsServlet{
 	
 	private String server, jobName;
 	private JenkinsJsonParserInterface jjp;
@@ -24,11 +21,7 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 		this.jjp = new JenkinsJsonParser(this.server, this.jobName);
 		this.jvo = jjp.createJenkinsVO();
 	}
-	
-	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		
-	}
-	
 	/** Prüft Vollstaendigkeit und Gueltigkeit der URL
 	 * @return true, wenn ok
 	 */
@@ -165,13 +158,17 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 		//ist ueberhaupt etwas vorhanden?
 		if(jvo.getColor() != null){
 			//Alles wichtige vom CI-Server parsen und in einer ArrayList speichern
+			int count = 0;
 			for(Object o: jvo.getBuilds()){
-				ts = jjp.getTimeStamp((Integer)o);
-				nr = (Integer)o;
-				color = jjp.getColor((Integer)o);
-				builder = jjp.getBuilder((Integer)o);
-				build = new Build(ts, nr, color, builder);
-				builds.add(build);
+				if(count < 21){
+					ts = jjp.getTimeStamp((Integer)o);
+					nr = (Integer)o;
+					color = jjp.getColor((Integer)o);
+					builder = jjp.getBuilder((Integer)o);
+					build = new Build(ts, nr, color, builder);
+					builds.add(build);
+					count++;
+				}
 			}
 		}
 		else System.out.println("Fehler bei Erstellung von JenkinsVO");
@@ -342,37 +339,57 @@ public class JenkinsBlameStatsServlet extends HttpServlet{
 	public List<Overview> getOverviews(){
 		
 		int rot = 0, blau = 0;
-		List<Build> builds;
+		List<Build> builds = null;
 		List<String> member = new ArrayList();
 		Overview overview;
 		List<Overview> overviews = new ArrayList();
 		
 		builds = getBuildsByName(this.jobName);
-		
-		for(Build b: builds){
-			if(!member.contains(b.getBuilder())){
-				member.add(b.getBuilder());
-				System.out.println(b.getBuilder());
-			}
-		}
-		
-		for(String name: member){
+		if(builds != null){
 			for(Build b: builds){
-				if(b.getBuilder().equals(name)){
-					if(b.getColor().equals("red")){
-						rot++;
+				if(b.getBuilder() != null){
+					if(!member.contains(b.getBuilder())){
+						member.add(b.getBuilder());
+						System.out.println(b.getBuilder());
 					}
-					else if(b.getColor().equals("blue")){
-						blau++;
+				}
+				else if(b.getBuilder() == null){
+					if(!member.contains("Autobuilder")){
+						member.add("Autobuilder");
+						System.out.println("Autobuilder");
 					}
 				}
 			}
-			overview = new Overview(name, blau, rot);
-			overviews.add(overview);
 			
-			rot = 0;
-			blau = 0;
+			for(String name: member){
+				for(Build b: builds){
+					if(b.getBuilder() != null){
+						if(b.getBuilder().equals(name)){
+							if(b.getColor().equals("red")){
+								rot++;
+							}
+							else if(b.getColor().equals("blue")){
+								blau++;
+							}
+						}
+					}
+					else{	
+						if(b.getColor().equals("red")){
+							rot++;
+						}
+						else if(b.getColor().equals("blue")){
+							blau++;
+						}
+					}
+				}
+				overview = new Overview(name, blau, rot);
+				overviews.add(overview);
+				
+				rot = 0;
+				blau = 0;
+			}
 		}
+		else System.out.println("Builds ist null");
 		return overviews;		
 	}
 	
