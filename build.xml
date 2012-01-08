@@ -1,22 +1,29 @@
-<project>
+<project name="JenkinsBlame" default="cob-rep" basedir=".">
   <property name="sdk.dir" location="./appengine-java-sdk-1.6.1" />
 
   <import file="${sdk.dir}/config/user/ant-macros.xml" />
-
+  <property file="build.properties" />
+	
   <path id="project.classpath">
     <pathelement path="war/WEB-INF/classes" />
-    <fileset dir="war/WEB-INF/lib">
+    <fileset dir="${lib.dir}">
       <include name="**/*.jar" />
     </fileset>
     <fileset dir="${sdk.dir}/lib">
       <include name="shared/**/*.jar" />
     </fileset>
   </path>
-
-  <target name="copyjars"
+	
+  <target name="init">
+  	<mkdir dir="${inst.dir}" />
+  	<mkdir dir="${cob.rep.html}" />
+  	<mkdir dir="${cob.rep.xml}" />
+  </target>
+	
+  <target name="copyjars" depends="init"
       description="Copies the App Engine JARs to the WAR.">
     <copy
-        todir="war/WEB-INF/lib"
+        todir="${lib.dir}"
         flatten="true">
       <fileset dir="${sdk.dir}/lib/user">
         <include name="**/*.jar" />
@@ -45,7 +52,11 @@
   </target>
 
 <target name="test" depends="datanucleusenhance" description="Ausführen der Testsuit">
-	<junit>
+	<junit errorProperty="test.failed" failureProperty="test.failed" fork="yes">
+		
+		<sysproperty key="net.sourceforge.cobertura.datafile" file="${cobdata}" />
+		<classpath location="${inst.dir}" />
+		
 		<classpath location="war/WEB-INF/classes"></classpath>
 		<classpath refid="project.classpath"></classpath>
 		<formatter type="brief" usefile="false"/>
@@ -83,6 +94,24 @@
         <arg value="logs.txt"/>
       </args>
     </appcfg>
+  </target>
+
+  <!-- =================================
+        target: Cobertura
+  ================================= -->
+  <taskdef classpathref="project.classpath" resource="tasks.properties" />
+  <target name="cob-instr" depends="compile">
+    <cobertura-instrument todir="${inst.dir}" datafile="${cobdata}">
+      <fileset dir="${classes.dir}">
+        <include name="**/*.class" />
+        <exclude name="**/*Test.class" />
+        <exclude name="**/*Suite.class" />
+      </fileset>
+    </cobertura-instrument>
+  </target>
+	
+  <target name="cob-rep" depends="cob-instr, test" description="erzeugt Cobertura Reports">
+    <cobertura-report format="html" datafile="${cobdata}" destdir="${cob.rep.html}" srcdir="${src.dir}" />
   </target>
 
 </project>
