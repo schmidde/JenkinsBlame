@@ -6,11 +6,11 @@ import org.junit.*;
 
 public class JenkinsBlameStatsServletTest {
 	
-	private static JenkinsBlameStatsServlet jbs;
+	private static JenkinsBlameStats jbs;
 	
 	@BeforeClass
 	public static void setUp(){
-		jbs = new JenkinsBlameStatsServlet("http://jenkins.rambow.it:8080", "JenkinsBlame");
+		jbs = new JenkinsBlameStats("http://jenkins.rambow.it:8080", "JenkinsBlame");
 	}
 	@Test
 	public void testIsAdress(){

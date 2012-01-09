@@ -23,7 +23,7 @@ public class JenkinsBlameStatsServletIntegrationTest {
 
 	private PersistenceManager pm;
 	private Transaction tx;
-	private static JenkinsBlameStatsServlet jbs;
+	private static JenkinsBlameStats jbs;
     private final LocalServiceTestHelper helper =
         new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
     
@@ -50,7 +50,7 @@ public class JenkinsBlameStatsServletIntegrationTest {
     }
     @BeforeClass
     public static void setUpBeforeClass(){
-    	jbs = new JenkinsBlameStatsServlet("http://jenkins.rambow.it:8080", "JenkinsBlame");
+    	jbs = new JenkinsBlameStats("http://jenkins.rambow.it:8080", "JenkinsBlame");
     }
     @Before
     public void setUp() {

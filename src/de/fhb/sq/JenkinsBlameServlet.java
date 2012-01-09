@@ -28,7 +28,7 @@ public class JenkinsBlameServlet extends HttpServlet {
 		resp.setContentType("text/plain");
 		resp.getWriter().println("Hello, world");
 		JenkinsJsonParserInterface jjp = new JenkinsJsonParser(servername, jobname);
-		JenkinsBlameStatsServlet jbs = new JenkinsBlameStatsServlet(servername, jobname);
+		JenkinsBlameStats jbs = new JenkinsBlameStats(servername, jobname);
 		JSONObject json;
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		
