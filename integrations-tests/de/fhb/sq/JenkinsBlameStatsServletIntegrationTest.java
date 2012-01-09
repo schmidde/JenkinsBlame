@@ -127,12 +127,25 @@ public class JenkinsBlameStatsServletIntegrationTest {
     @Test
     public void checkColorTest4(){
     	
+    	Build b1 = new Build(1234567, 1, "red", "Dennis Schmidt");
+    	Build b2 = new Build(1234568, 2, "blue", "Dennis Schmidt");
+    	initDS(jbs.getJobName(), b1, b2);
+    	assertEquals("fixed", jbs.checkColor());
+    	
+    }
+    @Test
+    public void getOverviewsTest(){
+    	
+    	List<Overview> ol;
     	Build b1 = new Build(1234567, 1, "blue", "Dennis Schmidt");
     	Build b2 = new Build(1234568, 2, "red", "Dennis Schmidt");
     	initDS(jbs.getJobName(), b1, b2);
-    	assertEquals("destroyed", jbs.checkColor());
     	
+    	ol = jbs.getOverviews();
+    	assertTrue(!ol.isEmpty());
+    	assertEquals("Dennis Schmidt", ol.get(0).getName());
+    	assertEquals(1, ol.get(0).getBlau());
+    	assertEquals(1, ol.get(0).getRot());
     }
-    
    
 }
