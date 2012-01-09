@@ -6,6 +6,7 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
   JenkinsJsonParserTest.class,
   JenkinsBlameStatsServletTest.class,
+  JenkinsBlameStatsServletIntegrationTest.class
   
 })
 

@@ -69,11 +69,14 @@ public class JenkinsBlameStatsServletIntegrationTest {
     	List<Build> builds = null;
     	builds = jbs.getBuildsByName(jbs.getJobName());
     	assertTrue(!builds.isEmpty());
+    	assertEquals("blue", builds.get(0).getColor());
+    	assertEquals("red", builds.get(1).getColor());
     }
     @Test
     public void hasJobTest() {
     	
     	assertTrue(jbs.hasJob(jbs.getJobName()));
+    	assertFalse(jbs.hasJob(""));
     }
 
    
