@@ -1,5 +1,10 @@
 package de.fhb.sq;
-
+/**
+* @author Dennis Schmidt, Sebastian Graebitz
+* @version 1.0
+* 
+* Klasse dient der Erzeugung von Valueobjects
+*/
 public class Overview {
 
 	private int blau;

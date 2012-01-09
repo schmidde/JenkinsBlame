@@ -3,7 +3,13 @@ package de.fhb.sq;
 import java.util.List;
 import java.io.IOException;
 import org.json.JSONException;
-
+/**
+* @author Dennis Schmidt, Sebastian Graebitz
+* @version 1.0
+* 
+* Interface zur Implementierung eines Parser
+* fuer Json-Objekte von einem Jenkins CI-Server
+*/
 public interface JenkinsJsonParserInterface{
 
 	public int getLastBuildNr();

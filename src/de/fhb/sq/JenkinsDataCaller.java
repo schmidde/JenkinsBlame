@@ -10,15 +10,12 @@ import java.nio.charset.Charset;
 import org.json.JSONObject;
 import org.json.JSONException;
 import java.util.Date;
-
 /**
+ * @author Dennis Schmidt, Sebastian Graebitz
+ * @version 1.0
+ * 
  * Die Klasse holt von einem Jenkins CI Server XML oder JSON. 
  * Der Pfad des Servers und der Name des Projekts muss angegeben werden
- * 
- * @author Dennis Schmidt
- * @author Sebastian Gräbitz
- * 
- * @version 0.1
  * */
 public class JenkinsDataCaller implements JenkinsDataCallerInterface{
 	
@@ -31,7 +28,10 @@ public class JenkinsDataCaller implements JenkinsDataCallerInterface{
 		this.buildPath = buildPath;
 		this.buildJob = buildJob;
 	}
-	
+	/**
+	 * holt ein Json-Object aus einer URL
+	 * @return Json-Object
+	 */
 	public JSONObject callJson(String url) throws IOException, JSONException {
 	    InputStream is = new URL(url).openStream();
 	    try {

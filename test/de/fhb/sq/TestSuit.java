@@ -5,8 +5,8 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
   JenkinsJsonParserTest.class,
-  JenkinsBlameStatsServletTest.class,
-  JenkinsBlameStatsServletIntegrationTest.class
+  JenkinsBlameStatsTest.class,
+  JenkinsBlameStatsIntegrationTest.class
   
 })
 

@@ -10,7 +10,12 @@ import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.Order;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
-
+/**
+* @author Dennis Schmidt, Sebastian Graebitz
+* @version 1.0
+* 
+* Klasse dient der Erzeugung von Valueobjects und kann von JDO persistiert werden
+*/
 @PersistenceCapable
 public class Project {
 	

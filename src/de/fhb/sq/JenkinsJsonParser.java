@@ -7,7 +7,13 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
+/**
+* @author Dennis Schmidt, Sebastian Graebitz
+* @version 1.0
+* 
+* Implementierung eines Parser fuer Json-Objekte von einem 
+* Jenkins CI-Server
+*/
 public class JenkinsJsonParser implements JenkinsJsonParserInterface{
 	
 	private String serverUrl, jobName, generalURL, buildNrUrl, tree;
@@ -18,6 +24,10 @@ public class JenkinsJsonParser implements JenkinsJsonParserInterface{
 		this.serverUrl = serverUrl;
 		this.jobName = jobName;
 	}
+	/**
+	 * holt letzte Build-Nummer
+	 * @return gibt eine Buildnummer oder (-1) im Fehlerfall zurueck
+	 */
 	@Override
 	public int getLastBuildNr(){
 		
@@ -34,6 +44,10 @@ public class JenkinsJsonParser implements JenkinsJsonParserInterface{
 		}
 		return nr;
 	}
+	/**
+	 * holt alle Buildnummern vom CI-Server
+	 * @return gibt Liste mit Integerwerten zurueck
+	 */
 	@Override
 	public List<Integer> getBuilds(){
 		
@@ -52,6 +66,11 @@ public class JenkinsJsonParser implements JenkinsJsonParserInterface{
 		}
 		return builds;
 	}
+	/**
+	 * holt den Builder einer Buildnummer vom CI-Server
+	 * @param eine Buildnummer
+	 * @return gibt den Namen oder null im Fehlerfall zurueck
+	 */
 	@Override
 	public String getBuilder(int nr){
 		String tree = "tree=actions[causes[userName]]", s = null;
@@ -66,6 +85,10 @@ public class JenkinsJsonParser implements JenkinsJsonParserInterface{
 		}
 		return s;
 	}
+	/**
+	 * holt den letzten Builder des Projects
+	 * @return gibt den Builder oder null im Fehlerfall zurueck
+	 */
 	@Override
 	public String getLastBuilder(){
 		String tree = "tree=actions[causes[userName]]", s= null;
@@ -80,6 +103,10 @@ public class JenkinsJsonParser implements JenkinsJsonParserInterface{
 		}
 		return s;
 	}
+	/**
+	 * holt den aktuellen Status des letzten Build
+	 * @return gibt blue oder red zurueck, null im Fehlerfall
+	 */
 	@Override
 	public String getColor(){
 		
@@ -95,6 +122,11 @@ public class JenkinsJsonParser implements JenkinsJsonParserInterface{
 		}
 		return s;
 	}
+	/**
+	 * holt den Status eines bestimmten Build vom CI-Server
+	 * @param Nummer des zu durchsuchenden Build
+	 * @return gibt blue oder red zurueck, null im Fehlerfall
+	 */
 	@Override
 	public String getColor(int nr){
 		
@@ -114,6 +146,10 @@ public class JenkinsJsonParser implements JenkinsJsonParserInterface{
 		}
 		return color;
 	}
+	/**
+	 * holt die erste Buildnummer des Projekts
+	 * @return die erste Buildnummer, (-1) im Fehlerfall
+	 */
 	@Override
 	public int getFirstBuild(){
 		int nr = 0;
@@ -128,6 +164,10 @@ public class JenkinsJsonParser implements JenkinsJsonParserInterface{
 		}
 		return nr;
 	}
+	/**
+	 * holt den letzten erfolgreichen Build vom CI-Server
+	 * @return letzter erfolgreicher Build, (-1) im Fehlerfall
+	 */
 	@Override
 	public int getLastGoodBuild(){
 		int nr = 0;
@@ -143,6 +183,10 @@ public class JenkinsJsonParser implements JenkinsJsonParserInterface{
 		}
 		return nr;
 	}
+	/**
+	 * holt letzten felgeschlagenen Build vom CI-Server
+	 * @return letzten felgeschlagenen Build, (-1) im Fehlerfall
+	 */
 	@Override
 	public int getLastBadBuild(){
 		int nr = 0;
@@ -158,6 +202,10 @@ public class JenkinsJsonParser implements JenkinsJsonParserInterface{
 		}
 		return nr;
 	}
+	/**
+	 * holt den Timestamp des letzten Build
+	 * @return ein Timestamp
+	 */
 	@Override
 	public long getLastTimeStamp(){
 		long stamp = 0;
@@ -173,6 +221,11 @@ public class JenkinsJsonParser implements JenkinsJsonParserInterface{
 		}
 		return stamp;
 	}
+	/**
+	 * holt den Timestamp eines bestimmten Build
+	 * @param zu ermittelnde Buildnummer
+	 * @return gibt gesuchten Timesamp zrueck
+	 */
 	@Override
 	public long getTimeStamp(int nr){
 		long stamp = 0;
@@ -188,6 +241,10 @@ public class JenkinsJsonParser implements JenkinsJsonParserInterface{
 		}
 		return stamp;
 	}
+	/**
+	 * erstellt und befuellt ein Jenkins ValueObject
+	 * @return gibt ein befuelltes JenkinsVO zurueck
+	 */
 	@Override
 	public JenkinsVO createJenkinsVO(){
 		JenkinsVO jvo = new JenkinsVO();
@@ -207,15 +264,26 @@ public class JenkinsJsonParser implements JenkinsJsonParserInterface{
 
 		return jvo;
 	}
-	//generelle URL fuer JSON-Object des Jobs
+	/**
+	 * setzt eine Rest-URL fuer den Jenkins CI-Server zusammen 
+	 * @return Rest-URL
+	 */
 	public String getGeneralURL() {
 		
 		return generalURL = serverUrl + "/job/" + jobName + "/api/json?";
 	}
-	//spezielle URL fuer das JSON-Object des letzten Builds
+	/**
+	 * setzt eine Rest-URL fuer die letzte Buildnummer vom Jenkins CI-Server zusammen 
+	 * @return Rest-URL
+	 */
 	public String getBuildNrURL() throws IOException, JSONException {
 		return buildNrUrl = serverUrl + "/job/" + jobName + "/" + getLastBuildNr() + "/" + "/api/json?";
 	}
+	/**
+	 * setzt eine Rest-URL fuer eine bestimmte Buildnummer vom Jenkins CI-Server zusammen
+	 * @param zu durchsuchende Buildnummer 
+	 * @return Rest-URL
+	 */
 	public String getBuildNrURL(int nr) throws IOException, JSONException {
 		return buildNrUrl = serverUrl + "/job/" + jobName + "/" + nr + "/" + "/api/json?";
 	}

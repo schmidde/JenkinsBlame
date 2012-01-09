@@ -1,7 +1,13 @@
 package de.fhb.sq;
 
 import java.util.List;
-
+/**
+* @author Dennis Schmidt, Sebastian Graebitz
+* @version 1.0
+* 
+* Klasse dient zur Erzeugung von Valueobjects
+* Instanzen werden mit Daten vom Jenkins CI-Server gefüllt
+*/
 public class JenkinsVO {
 	
 	private int firstBuild;
