@@ -228,15 +228,13 @@ public class JenkinsBlameStats{
 			//erstellt neue Liste mit Build-Objekten vom CI-Server
 			if(jjp.getColor() != null){
 				for(Object o: jvo.getBuilds()){
-					if(count < 21){
-						ts = jjp.getTimeStamp((Integer)o);
-						nr = (Integer)o;
-						color = jjp.getColor((Integer)o);
-						builder = jjp.getBuilder((Integer)o);
-						build = new Build(ts, nr, color, builder);
-						buildsNeu.add(build);
-						count++;
-					}
+					
+					ts = jjp.getTimeStamp((Integer)o);
+					nr = (Integer)o;
+					color = jjp.getColor((Integer)o);
+					builder = jjp.getBuilder((Integer)o);
+					build = new Build(ts, nr, color, builder);
+					buildsNeu.add(build);	
 				}
 				
 				//fuegt alle neuen Builds zur Liste der gespeicherten Builds hinzu
