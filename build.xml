@@ -13,6 +13,8 @@
   	      <include name="*.jar" />
   	    </fileset>
     <fileset dir="${sdk.dir}/lib">
+      <include name="impl/**/*.jar"/>
+      <include name="testing/**/*.jar"/>
       <include name="shared/**/*.jar" />
     </fileset>
   </path>
