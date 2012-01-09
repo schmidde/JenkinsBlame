@@ -202,7 +202,7 @@ public class JenkinsBlameStats{
 		List<Project> projects;
 		Project project = null;
 		long ts;
-		int nr, max = 0, count = 0;
+		int nr, max = 0;
 		String color, builder;
 		
 		pm = new PMF().get().getPersistenceManager();
@@ -228,15 +228,12 @@ public class JenkinsBlameStats{
 			//erstellt neue Liste mit Build-Objekten vom CI-Server
 			if(jjp.getColor() != null){
 				for(Object o: jvo.getBuilds()){
-					if(count < 21){
 						ts = jjp.getTimeStamp((Integer)o);
 						nr = (Integer)o;
 						color = jjp.getColor((Integer)o);
 						builder = jjp.getBuilder((Integer)o);
 						build = new Build(ts, nr, color, builder);
 						buildsNeu.add(build);
-						count++;
-					}
 				}
 				
 				//fuegt alle neuen Builds zur Liste der gespeicherten Builds hinzu
