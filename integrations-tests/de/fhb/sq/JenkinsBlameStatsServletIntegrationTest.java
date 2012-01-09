@@ -147,5 +147,13 @@ public class JenkinsBlameStatsServletIntegrationTest {
     	assertEquals(1, ol.get(0).getBlau());
     	assertEquals(1, ol.get(0).getRot());
     }
-   
+    @Test
+    public void deleteJobTest(){
+    	
+    	Build b1 = new Build(1234567, 1, "blue", "Dennis Schmidt");
+    	Build b2 = new Build(1234568, 2, "red", "Dennis Schmidt");
+    	initDS(jbs.getJobName(), b1, b2);
+    	assertFalse(jbs.deleteJob(jbs.getJobName()));
+    	assertTrue(jbs.deleteJob(jbs.getJobName()));
+    }
 }
