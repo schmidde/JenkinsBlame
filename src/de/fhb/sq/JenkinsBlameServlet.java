@@ -34,7 +34,7 @@ public class JenkinsBlameServlet extends HttpServlet {
 		
 		try {
 			//ist URL korrekt?
-			if(jbs.isAdress(servername)){
+			if((jbs.isAdress(servername)) && (!jobname.equals(""))){
 				//ist Job bereits vorhanden?
 				if(!jbs.hasJob(jobname)){
 					//Job erstmalig mit allen Builds eintragen
@@ -58,6 +58,8 @@ public class JenkinsBlameServlet extends HttpServlet {
 				}
 				
 				//HTTP-Parameter definieren
+				req.setAttribute("servername", this.servername);
+				req.setAttribute("jobname", this.jobname);
 				req.setAttribute("server", "yes");
 				req.setAttribute("builder", jjp.getLastBuilder());
 				req.setAttribute("lastBuild", jjp.getLastBuildNr());
