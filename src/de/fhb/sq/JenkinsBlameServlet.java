@@ -40,6 +40,7 @@ public class JenkinsBlameServlet extends HttpServlet {
 					//Job erstmalig mit allen Builds eintragen
 					System.out.println("Neues Prejekt wird eingetragen");
 					jbs.initJob();
+					status = jbs.checkColor();
 				}
 				else {
 					System.out.println("Dieses Projekt wird bereits beobachtet");
@@ -62,7 +63,12 @@ public class JenkinsBlameServlet extends HttpServlet {
 				req.setAttribute("lastBuild", jjp.getLastBuildNr());
 				req.setAttribute("color", jjp.getColor());
 				req.setAttribute("status", status);
-				req.setAttribute("overview", jbs.getOverviews());
+				if(!jbs.getOverviews().isEmpty()){
+					req.setAttribute("overview", jbs.getOverviews());
+				}
+				else{
+					req.setAttribute("overview", null);
+				}
 				
 				//Webseite anzeigen
 				forward("/jenkinsblame.jsp", req, resp);

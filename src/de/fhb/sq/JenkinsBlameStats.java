@@ -373,7 +373,7 @@ public class JenkinsBlameStats{
 							}
 						}
 					}
-					else{	
+					else{
 						if(b.getColor().equals("red")){
 							rot++;
 						}
