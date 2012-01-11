@@ -102,6 +102,12 @@
       </args>
     </appcfg>
   </target>
+	
+  <target name="clean" description="Remove all files created by the build/test process.">
+	<delete file="${cobdata}" />
+	<delete dir="${inst.dir}" />
+	<delete dir="${cob.rep}" />
+  </target>
 
   <!-- =================================
         target: Cobertura

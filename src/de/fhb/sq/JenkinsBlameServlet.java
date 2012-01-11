@@ -74,19 +74,20 @@ public class JenkinsBlameServlet extends HttpServlet {
 				
 				//Webseite anzeigen
 				forward("/jenkinsblame.jsp", req, resp);
+				
 			}
 			else{ 
 				//Parameter definieren
 				req.setAttribute("server", "no");
 				forward("/jenkinsblame.jsp", req, resp);
 			}
+			
 		} 
 		catch (ServletException e) {
 			// TODO Auto-generated catch block
 			resp.getWriter().println("Eine ServletException ist aufgetreten");
 			e.printStackTrace();
-		}
-		finally{}
+		} finally{}
 
 	}
 	public void forward(String jspSite, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{

@@ -232,13 +232,19 @@ public class JenkinsBlameStats{
 					if(count < 21){
 						ts = jjp.getTimeStamp((Integer)o);
 						nr = (Integer)o;
-						color = jjp.getColor((Integer)o);
+						if(jjp.getColor((Integer)o) == null){
+							color = "red";
+						}else{
+							color = jjp.getColor((Integer)o);
+						}
+						
 						builder = jjp.getBuilder((Integer)o);
 						build = new Build(ts, nr, color, builder);
 						buildsNeu.add(build);
 						count++;
 					}
 				}
+				System.out.println("letzter Build: " + buildsNeu.get(0).getNr() + " Max: " + max);
 				
 				//fuegt alle neuen Builds zur Liste der gespeicherten Builds hinzu
 				for(Build b: buildsNeu){
