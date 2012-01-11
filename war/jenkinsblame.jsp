@@ -1,16 +1,19 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List, de.fhb.sq.Overview" %>
 <html>
-<head><title>JenkinsBlame</title></head>
+<head>
+<script src="jQuery-1.7.1.min.js" type="text/javascript"></script>
+<title>JenkinsBlame</title></head>
 <body>
 	<!-- Header -->
-	<div style="background-color: navajowhite; padding-left: 5px; border-top: 1px solid; border-bottom: 1px solid;"><br>
+	<div id="divHeader" style="background-color: navajowhite; padding-left: 5px; border-top: 1px solid; border-bottom: 1px solid;"><br>
 		<form action="/jenkinsblame" method="get">
 			<b>Servername</b>: (z.B. http://servername.de:port) 
-			<input name ="servername" type="text" />
+			<input name ="servername" id="servername" value="<%= request.getAttribute("servername") %>" type="text" />
 			<b>Jobname:</b> 
-			<input name="jobname" type="text" />
-			<input type="submit" value="Send" /><br>
+			<input name="jobname" id="jobname" value="<%= request.getAttribute("jobname") %>" type="text" />
+			<input type="submit" id="btnSubmit" value="Send" />
+			<input type="hidden" id="refresh" value="<%= request.getAttribute("refresh") %>"/><br>
 		</form>
 	</div>
 	<%  
@@ -72,5 +75,26 @@
 		</table>
 		<% } %>
 	</div>
+	<script type="text/javascript">		
+		if ($("#servername").val() == "null")
+		{
+			$("#servername").val("");		
+		}
+		
+		if ($("#jobname").val() == "null")
+		{
+			$("#jobname").val("");		
+		}
+		
+		if ($("#servername").val() != "" && $("#jobname").val() != "" && ($('#refresh').val() == "yes"))
+		{
+			$('#refresh').val("");
+			window.setInterval(setTimer,300000);
+		}
+		
+		function setTimer(){
+			$('#btnSubmit').click();			
+		}
+    </script> 
 </body>
 </html>
